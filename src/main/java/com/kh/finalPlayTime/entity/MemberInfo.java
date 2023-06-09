@@ -1,9 +1,13 @@
 package com.kh.finalPlayTime.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
+@Entity @Getter @Setter @ToString
 public class MemberInfo {
     @Id
     @Column(name = "id")
