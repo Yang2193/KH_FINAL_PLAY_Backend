@@ -1,18 +1,18 @@
 package com.kh.finalPlayTime.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "seat")
+
 public class Seat {
     @Id
-    @Column(name = "id")
-    private Long id;
-    @Column(length = 10)
-    private String playId;
+    @GeneratedValue
+    private Long seatId;
+    @ManyToOne
+    @JoinColumn(name = "play_id")
+    private PlayInfo playInfo;
     @Column(length = 10)
     private String seatRating;
-    @Column(length = 10)
-    private int price;
+    private Long price;
 }
