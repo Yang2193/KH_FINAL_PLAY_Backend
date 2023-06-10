@@ -36,7 +36,7 @@ public class Post {
     private LocalDateTime postDate;
 
     @OneToMany(mappedBy = "post")
-    private List<Reply> replyList = new ArrayList<>();
+    private List<Comment> commentList = new ArrayList<>();
     // 하나의 게시글에 여러개의 댓글이 달릴 수 있으니 OneToMany
     // 댓글 엔터티 기준으로는 여러 개의 같은 게시글 코드가 들어오니 ManyToOne
 

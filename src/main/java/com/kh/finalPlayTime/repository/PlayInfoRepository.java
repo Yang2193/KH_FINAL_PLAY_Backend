@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PlayInfoRepository extends JpaRepository <PlayInfo,String>{
+public interface PlayInfoRepository extends JpaRepository <PlayInfo, Long>{
     List<PlayInfo> findByPlayId(String playId);
 }

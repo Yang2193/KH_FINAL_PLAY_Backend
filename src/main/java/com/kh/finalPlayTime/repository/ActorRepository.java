@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ActorRepository extends JpaRepository<Actor,String> {
-    List<Actor> findByPlayId(String playId);
+public interface ActorRepository extends JpaRepository<Actor, Long> {
 
 }

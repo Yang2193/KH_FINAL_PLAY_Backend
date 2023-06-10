@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class Reply {
+public class Comment {
     @Id
-    @Column(name = "reply_id")
+    @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -28,7 +28,7 @@ public class Reply {
     private Post post;
 
     @Column(length = 300)
-    private String replyContent;
+    private String commentContent;
 
-    private LocalDateTime replyDate;
+    private LocalDateTime commentDate;
 }

@@ -16,4 +16,12 @@ public class PostLike {
     @Column(name = "post_like_id")
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private MemberInfo memberInfo;
+
 }
