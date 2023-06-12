@@ -14,12 +14,15 @@ import javax.persistence.*;
 
 public class Seat {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seatId;
+
     @ManyToOne
     @JoinColumn(name = "play_id")
     private PlayInfo playInfo;
+
     @Column(length = 10)
     private String seatRating;
+
     private Long price;
 }

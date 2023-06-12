@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Theater {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long theaterId;
     @Column(length = 20)
     private String theaterName;

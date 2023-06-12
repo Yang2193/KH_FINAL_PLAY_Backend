@@ -13,10 +13,10 @@ import javax.persistence.*;
 @ToString
 public class PlayInfo {
     @Id
-    @Column(name = "play_id_pk")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @Column(name = "play_id", length = 10, nullable = false, unique = true)
+    @Column(name = "play_id")
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//    @Column(name = "play_id", length = 10, nullable = false, unique = true)
     private String playId;
     @Column(length = 50)
     private String title;
