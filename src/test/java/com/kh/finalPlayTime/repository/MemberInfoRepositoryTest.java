@@ -10,7 +10,6 @@ import org.springframework.test.context.TestPropertySource;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 
