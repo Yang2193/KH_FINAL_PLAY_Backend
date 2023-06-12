@@ -7,22 +7,21 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "actor")
 @Getter
 @Setter
 @ToString
-
-public class Actor {
+public class PlayLike {
     @Id
-    @GeneratedValue
-    private Long actorId;
-    @Column(length = 20 )
-    private String actorName;
-    @Column(length = 20 )
-    private String  roleName;
-    @Column(length = 500)
-    private String actorImage;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "play_like_id")
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "play_id")
     private PlayInfo playInfo;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private MemberInfo memberInfo;
+
 }

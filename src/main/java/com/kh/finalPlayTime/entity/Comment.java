@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
+@Table(name = "comment")
 public class Comment {
     @Id
     @Column(name = "comment_id")
