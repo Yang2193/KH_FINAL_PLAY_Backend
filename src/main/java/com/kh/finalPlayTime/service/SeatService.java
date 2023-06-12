@@ -16,6 +16,6 @@ public class SeatService {
     private final SeatRepository seatRepository;
 
     public List<Seat> findSeat (String id) {
-        return seatRepository.findByPlayId(id);
+        return seatRepository.findByPlayInfoPlayId(id);
     }
 }

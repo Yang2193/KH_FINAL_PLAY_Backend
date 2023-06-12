@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface SeatRepository extends JpaRepository<Seat,Long> {
 
-    List<Seat> findByPlayId(String playId);
+    List<Seat> findByPlayInfoPlayId(String playId);
 
 }

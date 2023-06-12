@@ -15,7 +15,8 @@ public class ActorService {
     private final ActorRepository actorRepository;
 
     public List<Actor> findActor (String id) {
-        return actorRepository.findByPlayId(id);
+        List<Actor> actors = actorRepository.findByPlayInfoPlayId(id);
+        return actors;
     }
 
 }

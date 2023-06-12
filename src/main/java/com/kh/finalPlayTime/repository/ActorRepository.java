@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 
 public interface ActorRepository extends JpaRepository<Actor, Long> {
-    List <Actor> findByPlayId (String playId);
+    List<Actor> findByPlayInfoPlayId(String playId);
 }

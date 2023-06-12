@@ -15,6 +15,6 @@ public class TheaterService {
     private final TheaterRepository theaterRepository;
 
     public List<Theater> findTheater (String id) {
-        return theaterRepository.findByPlayId(id);
+        return theaterRepository.findByPlayInfoPlayId(id);
     }
 }

@@ -22,6 +22,7 @@ public class Theater {
     private String theaterName;
     @Column(length = 200)
     private String addr;
-    @OneToMany(mappedBy = "playId")
-    private List<PlayInfo> playInfos = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "play_id")
+    private PlayInfo playInfo;
 }
