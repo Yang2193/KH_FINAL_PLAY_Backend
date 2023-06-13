@@ -15,29 +15,33 @@ import java.util.List;
 @ToString
 public class Post {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "user_id")
     private MemberInfo memberInfo;
 
-    @Column(length = 100, nullable = false)
+    @Column(name = "post_title", length = 100, nullable = false)
     private String postTitle;
+
     @Lob
-    @Column(nullable = false)
+    @Column(name = "post_content", nullable = false)
     private String postContent;
-    @Column(length = 500)
+
+    @Column(name = "post_image_url", length = 500)
     private String postImageUrl;
-    @Column(length = 20)
+
+    @Column(name = "post_category", length = 20)
     private String postCategory;
+
+    @Column(name = "post_views")
     private int postViews;
+
+    @Column(name = "post_date")
     private LocalDateTime postDate;
 
     @OneToMany(mappedBy = "post")
     private List<Comment> commentList = new ArrayList<>();
-    // 하나의 게시글에 여러개의 댓글이 달릴 수 있으니 OneToMany
-    // 댓글 엔터티 기준으로는 여러 개의 같은 게시글 코드가 들어오니 ManyToOne
-
 }

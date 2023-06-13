@@ -31,6 +31,7 @@ public class PostService {
         for (Post post : posts) {
             PostDto postDto = new PostDto();
             postDto.setId(post.getId());
+            postDto.setMemberInfo(post.getMemberInfo());
             postDto.setPostTitle(post.getPostTitle());
             postDto.setPostContent(post.getPostContent());
             postDto.setPostImageUrl(post.getPostImageUrl());
