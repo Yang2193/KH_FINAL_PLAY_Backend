@@ -19,32 +19,4 @@ import java.util.List;
 @Slf4j // 로깅 데이터를 처리하기 위해 사용
 public class MemberInfoRepositoryTest {
 
-    @Autowired
-    private MemberInfoRepository memberInfoRepository;
-
-    @Test
-    @DisplayName("멤버 생성 테스트")
-    public void createMemberTest(){
-        for(int i = 1; i <= 5; i++) {
-            MemberInfo memberInfo = new MemberInfo();
-            memberInfo.setMemberId("test" + i);
-            memberInfo.setName("테스트" + i);
-            memberInfo.setEmail(i+"@gmail.com");
-            memberInfo.setJoinDate(LocalDateTime.now());
-            memberInfo.setPhoneNum("010-2732-231"+i);
-            memberInfo.setPwd("sphb802" + i);
-            memberInfo.setNickname("테스트닉네임" + i);
-            MemberInfo saveMember = memberInfoRepository.save(memberInfo);
-            System.out.println("결과 : " + saveMember);
-        }
-    }
-    @Test
-    @DisplayName("멤버 아이디 테스트")
-    public void findByIdTest(){
-        this.createMemberTest();
-        List<MemberInfo> list = memberInfoRepository.findByMemberId("test1");
-        for(MemberInfo e : list){
-            System.out.println("결과 : " + e);
-        }
-    }
 }
