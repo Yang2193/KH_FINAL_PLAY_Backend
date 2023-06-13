@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("test")
 public class TestController {
     @RequestMapping(value = "/hello", method = RequestMethod.GET) //
     public String getHello(){
