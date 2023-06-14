@@ -42,4 +42,25 @@ public class PostService {
         }
         return dtoList;
     }
+    public PostDto getPostById(Long postId) {
+        Post post = postRepository.findById(postId).orElse(null);
+        if (post != null) {
+            return convertToDto(post);
+        }
+        return null;
+    }
+
+    private PostDto convertToDto(Post post) {
+        PostDto postDto = new PostDto();
+        postDto.setId(post.getId());
+        postDto.setMemberInfo(post.getMemberInfo());
+        postDto.setPostTitle(post.getPostTitle());
+        postDto.setPostContent(post.getPostContent());
+        postDto.setPostImageUrl(post.getPostImageUrl());
+        postDto.setPostCategory(post.getPostCategory());
+        postDto.setPostViews(post.getPostViews());
+        postDto.setPostDate(post.getPostDate());
+        return postDto;
+    }
+
 }
