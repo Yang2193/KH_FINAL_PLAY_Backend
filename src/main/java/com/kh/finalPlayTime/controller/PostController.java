@@ -5,6 +5,7 @@ import com.kh.finalPlayTime.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -24,5 +25,16 @@ public class PostController {
     public ResponseEntity<List<PostDto>> getAllPosts() {
         List<PostDto> postList = postService.getAllPosts();
         return ResponseEntity.ok(postList);
+    }
+
+    // 게시물 상세 정보 조회
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable Long postId) {
+        PostDto post = postService.getPostById(postId);
+        if (post != null) {
+            return ResponseEntity.ok(post);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
