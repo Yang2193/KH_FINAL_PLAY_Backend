@@ -1,7 +1,6 @@
 package com.kh.finalPlayTime.service;
 
 import com.kh.finalPlayTime.dto.PlayInfoDto;
-import com.kh.finalPlayTime.dto.PlayListDto;
 import com.kh.finalPlayTime.entity.PlayInfo;
 import com.kh.finalPlayTime.repository.PlayInfoRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,24 +19,24 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PlayListService {
     private final PlayInfoRepository pir;
-    public List<PlayListDto> getPlayList(){
+    public List<PlayInfoDto> getPlayList(){
         List<PlayInfo> plays = pir.findAll();
-        List<PlayListDto> playListDtoList = new ArrayList<>();
+        List<PlayInfoDto> playInfoDtoList = new ArrayList<>();
         for(PlayInfo e : plays){
-            PlayListDto playListDto = new PlayListDto();
-            playListDto.setPlayId(e.getPlayId());
-            playListDto.setTitle(e.getTitle());
-            playListDto.setImageUrl(e.getPosterImageUrl());
-            playListDto.setPeriodStart(e.getPeriodStart());
-            playListDto.setPeriodEnd(e.getPeriodEnd());
-            playListDto.setTheaterName(e.getTheaterName());
-            playListDtoList.add(playListDto);
+            PlayInfoDto playInfoDto = new PlayInfoDto();
+            playInfoDto.setPlayId(e.getPlayId());
+            playInfoDto.setTitle(e.getTitle());
+            playInfoDto.setImageUrl(e.getImageUrl());
+            playInfoDto.setPeriodStart(e.getPeriodStart());
+            playInfoDto.setPeriodEnd(e.getPeriodEnd());
+            playInfoDto.setTheaterName(e.getTheaterName());
+            playInfoDtoList.add(playInfoDto);
         }
-        return playListDtoList;
+        return playInfoDtoList;
     }
 
     //제목검색 메소드 -> AND로 수정할 지 말지 고민 중. 배우도 추가하면 OR로 쓰는 레포지토리 메소드로 바꿀 듯?
-    public List<PlayListDto> searchPlayList(String[] keywords){
+    public List<PlayInfoDto> searchPlayList(String[] keywords){
         List<PlayInfo> list = new ArrayList<>();
         for(String e : keywords){
             List<PlayInfo> playInfoList = pir.findByTitleContaining(e);
@@ -48,17 +47,17 @@ public class PlayListService {
         List<PlayInfo> resultList = new ArrayList<>(distinctList);
 
         //Dto에 옮기기
-        List<PlayListDto> playListDtoList = new ArrayList<>();
+        List<PlayInfoDto> playInfoDtoList = new ArrayList<>();
         for(PlayInfo e : resultList){
-            PlayListDto playListDto = new PlayListDto();
-            playListDto.setPlayId(e.getPlayId());
-            playListDto.setTitle(e.getTitle());
-            playListDto.setImageUrl(e.getPosterImageUrl());
-            playListDto.setPeriodStart(e.getPeriodStart());
-            playListDto.setPeriodEnd(e.getPeriodEnd());
-            playListDto.setTheaterName(e.getTheaterName());
-            playListDtoList.add(playListDto);
+            PlayInfoDto playInfoDto = new PlayInfoDto();
+            playInfoDto.setPlayId(e.getPlayId());
+            playInfoDto.setTitle(e.getTitle());
+            playInfoDto.setImageUrl(e.getImageUrl());
+            playInfoDto.setPeriodStart(e.getPeriodStart());
+            playInfoDto.setPeriodEnd(e.getPeriodEnd());
+            playInfoDto.setTheaterName(e.getTheaterName());
+            playInfoDtoList.add(playInfoDto);
         }
-        return playListDtoList;
+        return playInfoDtoList;
     }
 }

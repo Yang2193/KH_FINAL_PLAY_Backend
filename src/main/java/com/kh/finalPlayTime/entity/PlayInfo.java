@@ -1,8 +1,7 @@
 package com.kh.finalPlayTime.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 
@@ -11,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
+@RequiredArgsConstructor
 public class PlayInfo {
     @Id
     @Column(name = "play_id")
@@ -24,16 +24,18 @@ public class PlayInfo {
     private String periodStart;
     @Column(length = 30)
     private String periodEnd;
-    @Column(length = 30)
-    private String playTime;
-    @Column(length = 30)
-    private String playAge;
     @Column(length = 500)
-    private String infoImageUrl;
-    @Column(length = 500)
-    private String posterImageUrl;
-    @Column(length = 500)
-    private String noticeImageUrl;
+    private String imageUrl;
     @Column(length = 30)
     private String theaterName;
+
+    //DB 저장
+    public PlayInfo(JSONObject item){
+        this.playId =  item.getString("mt20id");
+        this.title =  item.getString("prfnm");
+        this.theaterName =  item.getString("fcltynm");
+        this.periodStart = item.getString("prfpdfrom");
+        this.periodEnd = item.getString("prfpdto");
+        this.imageUrl = item.getString("poster");
+    }
 }

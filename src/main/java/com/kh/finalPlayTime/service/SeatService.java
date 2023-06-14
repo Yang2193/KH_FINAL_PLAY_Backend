@@ -1,6 +1,5 @@
 package com.kh.finalPlayTime.service;
 
-import com.kh.finalPlayTime.entity.Actor;
 import com.kh.finalPlayTime.entity.Seat;
 import com.kh.finalPlayTime.repository.SeatRepository;
 import lombok.RequiredArgsConstructor;
