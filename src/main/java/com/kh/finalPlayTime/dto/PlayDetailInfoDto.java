@@ -5,6 +5,9 @@ import lombok.Setter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 public class PlayDetailInfoDto {
@@ -23,21 +26,18 @@ public class PlayDetailInfoDto {
     private String playAge; // 연극 관람연령
     private String playPrice; // 좌석별 가격(R석 170,000원...)
     private String playDescImg1; // 연극 상세 이미지1
-    private String playDescImg2; // 연극 상세 이미지2
     private String playPlan; // 연극 스케줄
 
     public PlayDetailInfoDto (JSONObject item){
-        String descImg1 = null;
-        String descImg2 = null;
+        List<String> descImg1 = new ArrayList<>();
 
         Object obj = item.getJSONObject("styurls").get("styurl");
         if (obj instanceof String) {
-            descImg1 = item.getJSONObject("styurls").getString("styurl");
+            descImg1.add(item.getJSONObject("styurls").getString("styurl"));
         } else if(obj instanceof JSONArray) {
             JSONArray jsonArray = item.getJSONObject("styurls").getJSONArray("styurl");
             for (int i = 0; i < jsonArray.length(); i++) {
-                descImg1 = (String) jsonArray.get(0);
-                descImg2 = (String) jsonArray.get(1);
+                descImg1.add((String) jsonArray.get(i));
             }
         }
 
@@ -53,8 +53,7 @@ public class PlayDetailInfoDto {
         this.playCast = item.getString("prfcast");
         this.playAge = item.getString("prfage");
         this.playPrice = item.getString("pcseguidance");
-        this.playDescImg1 = descImg1;
-        this.playDescImg2 = descImg2;
+        this.playDescImg1 = descImg1.toString();
         this.playPlan = item.getString("dtguidance");
     }
 }
