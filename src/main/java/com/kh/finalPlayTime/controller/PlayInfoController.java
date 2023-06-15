@@ -1,6 +1,7 @@
 package com.kh.finalPlayTime.controller;
 
 import com.kh.finalPlayTime.dto.PlayDetailInfoDto;
+import com.kh.finalPlayTime.dto.TheaterDto;
 import com.kh.finalPlayTime.entity.Seat;
 import com.kh.finalPlayTime.entity.Theater;
 import com.kh.finalPlayTime.service.*;
@@ -19,11 +20,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping(value="/play")
 public class PlayInfoController {
-    private final PlayInfoService playInfoService;
-    private final SeatService seatService;
-    private final TheaterService theaterService;
     private final PlayInfoApiService apiService;
     private final PlayDetailInfoApiService detailApiService;
+    private final TheaterApiService theaterApiService;
 
     //연극 상세정보 찾기
     @GetMapping("/{mt20id}")
@@ -41,14 +40,10 @@ public class PlayInfoController {
         return new ResponseEntity<>(isSuccess, HttpStatus.OK);
     }
 
-    @GetMapping("/selectSeat")
-    public ResponseEntity<List<Seat>> selectSeat (@RequestParam String id){
-        List<Seat> list = seatService.findSeat(id);
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
-    @GetMapping("/selectTheater")
-    public ResponseEntity<List<Theater>> selectTheater (@RequestParam String id){
-        List<Theater> list = theaterService.findTheater(id);
-        return new ResponseEntity<>(list, HttpStatus.OK);
+    // 선택한 극장 상세정보 불러오기
+    @GetMapping("/theater/{mt10id}")
+    public List<TheaterDto> getTheaterDetail(@PathVariable String mt10id) {
+        String result = theaterApiService.TheaterDetailApi(mt10id);
+        return theaterApiService.detailFromJsonObj(result);
     }
 }

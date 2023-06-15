@@ -36,7 +36,7 @@ public class PlayInfoApiService {
                 .fromUriString("https://www.kopis.or.kr")
                 .path("/openApi/restful/pblprfr/")
                 .queryParam("service", key) // 인증키 (필수)
-                .queryParam("stdate", 20230601) // 공연시작일 (필수)
+                .queryParam("stdate", 20230615) // 공연시작일 (필수)
                 .queryParam("eddate", 20230901) // 공연종료일 (필수)
                 .queryParam("cpage", 1) // 현재 페이지 (필수)
                 .queryParam("rows", 100) // 페이지 당 목록 수 (필수)
