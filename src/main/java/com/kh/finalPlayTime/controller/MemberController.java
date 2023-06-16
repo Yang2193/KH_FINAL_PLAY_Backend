@@ -1,6 +1,7 @@
 package com.kh.finalPlayTime.controller;
 
 import com.kh.finalPlayTime.dto.MemberDto;
+import com.kh.finalPlayTime.dto.TokenDto;
 import com.kh.finalPlayTime.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/member")
 public class MemberController {
     @Autowired
     private MemberService memberService;
@@ -23,33 +25,33 @@ public class MemberController {
     }
 
     // 로그인
-    @PostMapping("/login")
-    public ResponseEntity<Boolean> memberLogin(@RequestBody Map<String, String> loginData) {
-        String getUserId = loginData.get("userId");
-        String getUserPw = loginData.get("userPw");
-        boolean result = memberService.getLoginCheck(getUserId, getUserPw);
-        if(result) {
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(true, HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<Boolean> memberLogin(@RequestBody Map<String, String> loginData) {
+//        String getUserId = loginData.get("userId");
+//        String getUserPw = loginData.get("userPw");
+//        boolean result = memberService.getLoginCheck(getUserId, getUserPw);
+//        if(result) {
+//            return new ResponseEntity<>(true, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(true, HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     // 회원가입
-    @PostMapping("/join/step2")
-    public ResponseEntity<Map<String,String>> memberJoin(@RequestBody Map<String, String> joinData) {
-        String getUserId = joinData.get("userId");
-        String getUserPw = joinData.get("userPw");
-        String getUserName = joinData.get("userName");
-        String getUserPhone = joinData.get("userPhone");
-        String getUserEmail = joinData.get("userEmail");
-        boolean result = memberService.regMember(getUserId, getUserPw, getUserName, getUserPhone, getUserEmail);
-        if(result) {
-            return new ResponseEntity(true, HttpStatus.OK);
-        } else {
-            return new ResponseEntity(false, HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PostMapping("/join/step2")
+//    public ResponseEntity<Map<String,String>> memberJoin(@RequestBody Map<String, String> joinData) {
+//        String getUserId = joinData.get("userId");
+//        String getUserPw = joinData.get("userPw");
+//        String getUserName = joinData.get("userName");
+//        String getUserPhone = joinData.get("userPhone");
+//        String getUserEmail = joinData.get("userEmail");
+//        boolean result = memberService.regMember(getUserId, getUserPw, getUserName, getUserPhone, getUserEmail);
+//        if(result) {
+//            return new ResponseEntity(true, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity(false, HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @PostMapping("/find/memberid")
     public ResponseEntity<String> findMemberId(@RequestBody Map<String, String> findIdData) {
@@ -76,5 +78,16 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(memberDto);
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<MemberDto> signup(@RequestBody MemberDto memberDto){
+        return ResponseEntity.ok(memberService.signup(memberDto));
+    }
+
+    @PostMapping("/login") // 로그인시 ID, PW 일치 시 TRUE와 토큰을 함께 반환하게 하고, 불일치 시 FALSE만 반환하게 하는 방법 찾기
+    public ResponseEntity<TokenDto> memberLogin(@RequestBody MemberDto memberDto) {
+        TokenDto tokenDto = memberService.login(memberDto);
+        return ResponseEntity.ok(tokenDto);
     }
 }

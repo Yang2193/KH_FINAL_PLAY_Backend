@@ -5,11 +5,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MemberInfoRepository extends JpaRepository<MemberInfo, Long> {
-    List<MemberInfo> findByUserId(String userId);
+    Optional<MemberInfo> findByUserId(String userId);
     List<MemberInfo> findByUserIdAndUserPw(String userId, String userPw);
     MemberInfo findByUserNameAndUserEmail(String userName, String userEmail);
     MemberInfo findByUserIdAndUserNameAndUserEmail(String userId, String userName, String userEmail);
+
+    boolean existsByUserEmail(String email);
+    boolean existsByUserId(String userId);
 }
