@@ -12,7 +12,7 @@ import javax.persistence.*;
 @ToString
 public class PlayLike {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "play_like_id")
     private Long id;
 
@@ -21,7 +21,7 @@ public class PlayLike {
     private PlayInfo playInfo;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "userId")
     private MemberInfo memberInfo;
 
 }
