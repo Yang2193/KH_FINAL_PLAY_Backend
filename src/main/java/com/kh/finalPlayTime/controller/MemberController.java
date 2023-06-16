@@ -51,7 +51,7 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/find")
+    @PostMapping("/find/memberid")
     public ResponseEntity<String> findMemberId(@RequestBody Map<String, String> findIdData) {
         String userName = findIdData.get("userName");
         String userEmail = findIdData.get("userEmail");
@@ -65,7 +65,7 @@ public class MemberController {
         return ResponseEntity.ok(memberDto);
     }
 
-    @PostMapping("/find")
+    @PostMapping("/find/memberpw")
     public ResponseEntity<String> findMemberPw(@RequestBody Map<String, String> findPwData) {
         String userId = findPwData.get("userId");
         String userName = findPwData.get("userName");
