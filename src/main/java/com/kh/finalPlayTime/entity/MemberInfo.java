@@ -1,5 +1,6 @@
 package com.kh.finalPlayTime.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 public class MemberInfo {
     @Id
     @Column(unique = true, length = 20, nullable = false)
+    @JsonProperty("userId")
     private String userId;
     @Column(name = "password", length = 20)
     private String userPw;
@@ -28,5 +30,4 @@ public class MemberInfo {
     private String userPhone;
     @Column
     private LocalDateTime joinDate;
-
 }

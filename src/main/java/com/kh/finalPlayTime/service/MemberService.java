@@ -24,6 +24,34 @@ public class MemberService {
         this.memberInfoRepository = memberInfoRepository;
     }
 
+    // 아이디 찾기
+    public String findId(String userName, String userEmail) {
+        MemberInfo member = memberInfoRepository.findByUserNameAndUserEmail(userName, userEmail);
+        if (member == null) {
+            System.out.println("아이디를 찾지 못함");
+            return null; // 아이디를 찾지 못한 경우 null을 반환하거나 원하는 대응을 수행
+        }
+        MemberDto memberDto = new MemberDto();
+        memberDto.setUserId(member.getUserId());
+        System.out.println("Test :" + memberDto.getUserId());
+        String result = member.getUserId();
+        return result;
+    }
+
+    // 패스워드 찾기
+    public String findPw(String userId, String userName, String userEmail) {
+        MemberInfo member = memberInfoRepository.findByUserIdAndUserNameAndUserEmail(userId, userName, userEmail);
+        if (member == null) {
+            System.out.println("아이디를 찾지 못함");
+            return null; // 아이디를 찾지 못한 경우 null을 반환하거나 원하는 대응을 수행
+        }
+        MemberDto memberDto = new MemberDto();
+        memberDto.setUserPw(member.getUserPw());
+        System.out.println("Test :" + memberDto.getUserPw());
+        String result = member.getUserPw();
+        return result;
+    }
+
     // 아이디로 회원 조회
     public List<MemberDto> getMemberList(String userId) {
         List<MemberDto> memberDtoList = new ArrayList<>();
