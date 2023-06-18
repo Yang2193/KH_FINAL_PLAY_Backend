@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -48,19 +49,44 @@ public class PlayLikeService {
     }
     // 찜등록
 
-    public void addPlayLike(String userId, String playId) {
+    public PlayLikeDto addPlayLike(String userId, String playId) {
         PlayLike playLike = new PlayLike();
 
         // 회원 정보 설정
-        MemberInfo memberInfo = new MemberInfo();
-        memberInfo.setUserId(userId);
+        Optional<MemberInfo> memberInfoOptional = memberInfoRepository.findByUserId(userId);
+        if (memberInfoOptional.isEmpty()) {
+            throw new IllegalArgumentException("Member not found");
+        }
+        MemberInfo memberInfo = memberInfoOptional.get();
         playLike.setMemberInfo(memberInfo);
 
         // 플레이 정보 설정
-        PlayInfo playInfo = new PlayInfo();
-        playInfo.setPlayId(playId);
+        Optional<PlayInfo> playInfoOptional = playInfoRepository.findByPlayId(playId);
+        if (playInfoOptional.isEmpty()) {
+            throw new IllegalArgumentException("Play not found");
+        }
+        PlayInfo playInfo = playInfoOptional.get();
         playLike.setPlayInfo(playInfo);
 
         playLikeRepository.save(playLike);
+
+        // PlayLikeDto 생성 및 반환
+        PlayLikeDto playLikeDto = new PlayLikeDto();
+        playLikeDto.setPlayLikeId(playLike.getId());
+        playLikeDto.setUserId(playLike.getMemberInfo().getUserId());
+        playLikeDto.setPlayId(playLike.getPlayInfo().getPlayId());
+        return playLikeDto;
     }
+
+    public void deletePlayLike(String userId, String playId) {
+        // 찜 정보 조회
+        PlayLike playLike = playLikeRepository.findByMemberInfoUserIdAndPlayInfoPlayId(userId, playId);
+        if (playLike == null) {
+            throw new IllegalArgumentException("Play like not found");
+        }
+
+        // 찜 정보 삭제
+        playLikeRepository.delete(playLike);
+    }
+
 }

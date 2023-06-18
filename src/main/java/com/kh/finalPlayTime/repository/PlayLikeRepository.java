@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface PlayLikeRepository extends JpaRepository<PlayLike,Long> {
         List<PlayLike> findByMemberInfo(MemberInfo memberInfo);
+        PlayLike findByMemberInfoUserIdAndPlayInfoPlayId(String userId, String playId);
+
 
 }
 

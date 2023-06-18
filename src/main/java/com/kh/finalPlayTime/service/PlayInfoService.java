@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @Service
@@ -14,7 +14,7 @@ import java.util.List;
 public class PlayInfoService {
     private final PlayInfoRepository playInfoRepository;
 
-    public List<PlayInfo> findInfo (String id) {
+    public Optional<PlayInfo> findInfo (String id) {
 //        List<PlayInfo> playInfoList = playInfoRepository.findByPlayId(id);
 //        List<PlayInfoDto> playInfoDtos = new ArrayList<>();
 //        for (PlayInfo play : playInfoList) {

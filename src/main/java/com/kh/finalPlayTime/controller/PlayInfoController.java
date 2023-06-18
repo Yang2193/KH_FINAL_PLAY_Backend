@@ -60,10 +60,15 @@ public class PlayInfoController {
         List<PlayLikeDto> playLikeDTOs = playLikeService.findPlayLikeList2(id);
         return new ResponseEntity<>(playLikeDTOs, HttpStatus.OK);
     }
-// 찜목록 추가
-    @PostMapping("addPlayLike")
-    public ResponseEntity<String> addPlayLike(@RequestBody PlayLikeDto playLikeDto) {
-        playLikeService.addPlayLike(playLikeDto.getUserId(), playLikeDto.getPlayId());
-        return ResponseEntity.ok("True");
+    @PostMapping("/addPlayLike")
+    public ResponseEntity<PlayLikeDto> addPlayLike(@RequestBody PlayLikeDto playLikeDto) {
+        PlayLikeDto addedPlayLike = playLikeService.addPlayLike(playLikeDto.getUserId(), playLikeDto.getPlayId());
+        return ResponseEntity.ok(addedPlayLike);
+    }
+
+    @PostMapping("/deletePlayLike")
+    public ResponseEntity<String> deletePlayLike(@RequestBody PlayLikeDto playLikeDto) {
+        playLikeService.deletePlayLike(playLikeDto.getUserId(), playLikeDto.getPlayId());
+        return ResponseEntity.ok("Play like deleted");
     }
 }
