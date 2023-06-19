@@ -44,7 +44,7 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/playList/**").permitAll()
                 .antMatchers("/play/**").permitAll()
-                .antMatchers("/post/**").permitAll()
+//                .antMatchers("/post/**").permitAll()
                 .antMatchers("/comments/**").permitAll()
                 .antMatchers("/member/**").permitAll()
                 .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception").permitAll()

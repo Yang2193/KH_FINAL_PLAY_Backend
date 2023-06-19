@@ -6,6 +6,8 @@ import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,8 +19,8 @@ public class MemberDto {
     private String userName;
     private String userPhone;
     private String userEmail;
-    private String nickname;
-
+    private String userNickname;
+    private LocalDateTime joinDate;
     private String message;
 
     public MemberInfo toMember(PasswordEncoder passwordEncoder) {
@@ -27,7 +29,9 @@ public class MemberDto {
                 .email(userEmail)
                 .password(passwordEncoder.encode(userPw))
                 .name(userName)
-                .nickname(nickname)
+                .nickname(userNickname)
+                .phone(userPhone)
+                .joinDate(LocalDateTime.now())
                 .authority(Authority.ROLE_USER)
                 .build();
     }

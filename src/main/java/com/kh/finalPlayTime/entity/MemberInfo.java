@@ -33,13 +33,15 @@ public class MemberInfo {
 
     //빌더
     @Builder
-    public MemberInfo(String user, String email, String password, String name, String nickname, Authority authority) {
+    public MemberInfo(String user, String email, String password, String name, String nickname, String phone, LocalDateTime joinDate, Authority authority) {
 
         this.userId = user;
         this.userPw = password;
         this.userName = name;
         this.userNickname = nickname;
         this.userEmail = email;
+        this.userPhone = phone;
+        this.joinDate = joinDate;
         this.authority = authority;
     }
 

@@ -115,15 +115,16 @@ public class MemberService {
 //        log.warn(rst.toString());
 //        return true;
 //    }
-//Token 적용 새 회원가입 메소드
-public MemberDto signup(MemberDto memberDto){
-    if(memberInfoRepository.existsByUserId(memberDto.getUserId())) {
-        throw new RuntimeException("이미 가입되어 있는 유저입니다.");
-    }
 
-    MemberInfo memberInfo = memberDto.toMember(passwordEncoder);
-    return MemberDto.of(memberInfoRepository.save(memberInfo));
-}
+    //Token 적용 새 회원가입 메소드
+    public MemberDto signup(MemberDto memberDto){
+        if(memberInfoRepository.existsByUserId(memberDto.getUserId())) {
+            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
+        }
+
+        MemberInfo memberInfo = memberDto.toMember(passwordEncoder);
+        return MemberDto.of(memberInfoRepository.save(memberInfo));
+    }
 
     // 로그인 시 토큰 발급
     public TokenDto login(MemberDto memberDto){
