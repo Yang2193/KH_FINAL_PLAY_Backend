@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
-@Configuration // configuration 어노테이션 붙은건 config 패키지로 넣어줘야.
+@Configuration
 @EnableWebSecurity
 @Component
 public class WebSecurityConfig {
@@ -44,10 +44,12 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/playList/**").permitAll()
                 .antMatchers("/play/**").permitAll()
-//                .antMatchers("/post/**").permitAll()
+                .antMatchers("/post/**").permitAll()
                 .antMatchers("/comments/**").permitAll()
                 .antMatchers("/member/**").permitAll()
                 .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception").permitAll()
+                .antMatchers("/postUpload").authenticated()
+
                 .anyRequest().authenticated()
 
                 .and()

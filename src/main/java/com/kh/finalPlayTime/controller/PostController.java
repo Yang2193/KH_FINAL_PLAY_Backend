@@ -11,14 +11,11 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/post")
+@RequiredArgsConstructor
 public class PostController {
-
     private final PostService postService;
 
-
-    // 게시물 목록 조회
     @GetMapping("/select")
     public ResponseEntity<List<PostDto>> getAllPosts() {
         List<PostDto> postList = postService.getAllPosts();
@@ -33,5 +30,16 @@ public class PostController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/{postId}/increase-views")
+    public void increasePostViews(@PathVariable Long postId) {
+        postService.increasePostViews(postId);
+    }
+
+    @PostMapping("/postUpload")
+    public ResponseEntity<PostDto> addPost(@RequestBody PostDto postDto) {
+        PostDto savedPost = postService.addPost(postDto);
+        return ResponseEntity.ok(savedPost);
     }
 }
