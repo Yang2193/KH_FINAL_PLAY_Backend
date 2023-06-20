@@ -46,14 +46,16 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .authorizeRequests()
                 .antMatchers("/playList/**").permitAll()
                 .antMatchers("/play/**").permitAll()
-                .antMatchers("/post/**").permitAll()
+//                .antMatchers("/post/**").permitAll()
                 .antMatchers("/comments/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
+                .apply(new JwtSecurityConfig(tokenProvider))
+                .and()
+                .cors();
 
         return http.build();
     }
@@ -62,6 +64,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000")
                 .allowedMethods("*")
+                .allowedHeaders("*")
                 .allowCredentials(true);
     }
 }
