@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -61,6 +62,24 @@ public class PostService {
         postDto.setPostViews(post.getPostViews());
         postDto.setPostDate(post.getPostDate());
         return postDto;
+    }
+
+    public List<PostDto> getMemberPosts(String userId) {
+        List<Post> posts = postRepository.findByMemberInfoUserId(userId);
+        List<PostDto> postDtos = new ArrayList<>();
+        for (Post post : posts) {
+            PostDto postDto = new PostDto();
+            postDto.setId(post.getId());
+            postDto.setMemberInfo(post.getMemberInfo());
+            postDto.setPostTitle(post.getPostTitle());
+            postDto.setPostContent(post.getPostContent());
+            postDto.setPostImageUrl(post.getPostImageUrl());
+            postDto.setPostCategory(post.getPostCategory());
+            postDto.setPostViews(post.getPostViews());
+            postDto.setPostDate(post.getPostDate());
+            postDtos.add(postDto);
+        }
+        return postDtos;
     }
 
 }
