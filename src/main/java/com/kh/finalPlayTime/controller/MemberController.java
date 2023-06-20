@@ -20,7 +20,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/member")
-public class MemberController {
+public class MemberController { // 마이페이지 전용 컨트롤러로 활용.
     @Autowired
     private MemberService memberService;
     public MemberController(MemberService memberService) {
@@ -54,14 +54,4 @@ public class MemberController {
         return ResponseEntity.ok(memberDto);
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<MemberDto> signup(@RequestBody MemberDto memberDto){
-        return ResponseEntity.ok(memberService.signup(memberDto));
-    }
-
-    @PostMapping("/auth") // 로그인시 ID, PW 일치 시 TRUE와 토큰을 함께 반환하게 하고, 불일치 시 FALSE만 반환하게 하는 방법 찾기
-    public ResponseEntity<TokenDto> getToken(@RequestBody MemberDto memberDto) {
-        TokenDto tokenDto = memberService.login(memberDto);
-        return ResponseEntity.ok(tokenDto);
-    }
 }

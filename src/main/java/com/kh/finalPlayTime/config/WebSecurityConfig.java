@@ -13,12 +13,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @RequiredArgsConstructor
-@Configuration
+@Configuration // configuration 어노테이션 붙은건 config 패키지로 넣어줘야.
 @EnableWebSecurity
 @Component
-public class WebSecurityConfig {
+public class WebSecurityConfig implements WebMvcConfigurer {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
@@ -46,15 +48,20 @@ public class WebSecurityConfig {
                 .antMatchers("/play/**").permitAll()
                 .antMatchers("/post/**").permitAll()
                 .antMatchers("/comments/**").permitAll()
-                .antMatchers("/member/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception").permitAll()
-                .antMatchers("/postUpload").authenticated()
-
                 .anyRequest().authenticated()
 
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));
 
         return http.build();
+    }
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:3000")
+                .allowedMethods("*")
+                .allowCredentials(true);
     }
 }
