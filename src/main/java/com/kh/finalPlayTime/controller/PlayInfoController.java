@@ -26,7 +26,7 @@ public class PlayInfoController {
     private final TheaterApiService theaterApiService;
     private final PlayLikeService playLikeService;
 
-    //연극 상세정보 찾기
+    //선택한 연극 상세정보 찾기
     @GetMapping("/{mt20id}")
     public List<PlayDetailInfoDto> getPlayDetail(@PathVariable String mt20id){
         String result = detailApiService.playDetailInfoApi(mt20id);
@@ -42,30 +42,31 @@ public class PlayInfoController {
         return new ResponseEntity<>(isSuccess, HttpStatus.OK);
     }
 
-    // 선택한 극장 상세정보 불러오기
+    // 선택한 연극의 극장 상세 정보 불러오기
     @GetMapping("/theater/{mt10id}")
     public List<TheaterDto> getTheaterDetail(@PathVariable String mt10id) {
         String result = theaterApiService.TheaterDetailApi(mt10id);
         return theaterApiService.detailFromJsonObj(result);
     }
-// 찜목록 엔티티로 불러오기
+    // 찜목록 엔티티로 불러오기
     @GetMapping("playLikeList")
     public ResponseEntity <List<PlayLike>> getPlayLikeList(String id){
         List<PlayLike> list = playLikeService.findPlayLikeList(id);
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
-// 찜목록 DTO로 불러오기
+    // 찜목록 DTO로 불러오기
     @GetMapping("playLikeList2")
     public ResponseEntity<List<PlayLikeDto>> getPlayLikeList2(String id) {
         List<PlayLikeDto> playLikeDTOs = playLikeService.findPlayLikeList2(id);
         return new ResponseEntity<>(playLikeDTOs, HttpStatus.OK);
     }
+    // 찜추가
     @PostMapping("/addPlayLike")
     public ResponseEntity<PlayLikeDto> addPlayLike(@RequestBody PlayLikeDto playLikeDto) {
         PlayLikeDto addedPlayLike = playLikeService.addPlayLike(playLikeDto.getUserId(), playLikeDto.getPlayId());
         return ResponseEntity.ok(addedPlayLike);
     }
-
+    // 찜삭제
     @PostMapping("/deletePlayLike")
     public ResponseEntity<String> deletePlayLike(@RequestBody PlayLikeDto playLikeDto) {
         playLikeService.deletePlayLike(playLikeDto.getUserId(), playLikeDto.getPlayId());
