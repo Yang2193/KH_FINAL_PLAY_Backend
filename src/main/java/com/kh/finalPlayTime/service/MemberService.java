@@ -76,7 +76,6 @@ public class MemberService {
 //    }
 
     public MemberDto getMemberList(String userId) {
-
         Optional<MemberInfo> optionalMemberInfo = memberInfoRepository.findByUserId(userId);
         MemberDto memberDto = new MemberDto();
         if(optionalMemberInfo.isPresent()) {

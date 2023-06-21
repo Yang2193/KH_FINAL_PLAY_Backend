@@ -54,4 +54,15 @@ public class MemberController { // 마이페이지 전용 컨트롤러로 활용
         return ResponseEntity.ok(memberDto);
     }
 
+    @PostMapping("/userinfo")
+    public ResponseEntity<MemberDto> getUserInfo(@RequestBody Map<String, String> getUserData) {
+        String userId = getUserData.get("userId");
+        MemberDto memberDto = memberService.getMemberList(userId);
+        System.out.println(memberDto);
+        if(memberDto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(memberDto);
+    }
+
 }

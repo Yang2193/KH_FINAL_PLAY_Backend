@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -80,21 +81,17 @@ public class PostService {
     private PostDto convertToDto(Post post) {
         PostDto postDto = new PostDto();
         postDto.setId(post.getId());
+        postDto.setMemberInfo(post.getMemberInfo());
         postDto.setPostTitle(post.getPostTitle());
         postDto.setPostContent(post.getPostContent());
         postDto.setPostImageUrl(post.getPostImageUrl());
         postDto.setPostCategory(post.getPostCategory());
         postDto.setPostViews(post.getPostViews());
         postDto.setPostDate(post.getPostDate());
-
-        // 변경: MemberInfo 객체 가져와서 설정
-        MemberInfo memberInfo = post.getMemberInfo();
-        if (memberInfo != null) {
-            postDto.setMemberInfo(memberInfo);
-        }
-
         return postDto;
     }
+
+
     public List<PostDto> getMemberPosts(String userId) {
         List<Post> posts = postRepository.findByMemberInfoUserId(userId);
         List<PostDto> postDtos = new ArrayList<>();
@@ -112,4 +109,5 @@ public class PostService {
         }
         return postDtos;
     }
+
 }
