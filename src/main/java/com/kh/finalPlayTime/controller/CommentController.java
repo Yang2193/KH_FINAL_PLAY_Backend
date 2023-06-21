@@ -19,12 +19,12 @@ public class CommentController {
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
-
-    @PostMapping
-    public ResponseEntity<CommentDto> createComment(@RequestBody CommentDto commentDto) {
-        CommentDto createdComment = commentService.createComment(commentDto);
-        return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
+    @PostMapping("/{postId}")
+    public ResponseEntity<CommentDto> createComment(@PathVariable Long postId, @RequestBody CommentDto commentDto) {
+        CommentDto createdComment = commentService.createComment(postId, commentDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<CommentDto> getCommentById(@PathVariable Long id) {

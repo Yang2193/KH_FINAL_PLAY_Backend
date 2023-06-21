@@ -20,7 +20,7 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
-    public CommentDto createComment(CommentDto commentDto) {
+    public CommentDto createComment(Long postId, CommentDto commentDto) {
         Comment comment = new Comment();
         comment.setCommentContent(commentDto.getCommentContent());
         // 필요한 다른 속성들도 CommentDto에 맞게 매핑해주세요.
