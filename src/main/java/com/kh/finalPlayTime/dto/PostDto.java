@@ -1,5 +1,6 @@
 package com.kh.finalPlayTime.dto;
 
+
 import com.kh.finalPlayTime.entity.MemberInfo;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 public class PostDto {
     private Long id;
-    private String userId; // userId 필드 추가
+    private MemberInfo memberInfo;
     private String postTitle;
     private String postContent;
     private String postImageUrl;
@@ -18,4 +19,3 @@ public class PostDto {
     private int postViews;
     private LocalDateTime postDate;
 }
-

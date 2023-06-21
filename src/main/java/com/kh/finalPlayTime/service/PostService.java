@@ -20,7 +20,13 @@ public class PostService {
 
     public List<PostDto> getAllPosts() {
         List<Post> posts = postRepository.findAll();
-        return convertToDtoList(posts);
+        List<PostDto> postDtoList = convertToDtoList(posts);
+
+        for (PostDto postDto : postDtoList) {
+            System.out.println(postDto); // postDto를 출력
+        }
+
+        return postDtoList;
     }
 
     private List<PostDto> convertToDtoList(List<Post> posts) {
@@ -51,10 +57,11 @@ public class PostService {
         Post post = convertToPost(postDto);
         post.setPostDate(LocalDateTime.now()); // 현재 시간 설정
 
-        // 변경: MemberInfo 객체 생성 및 설정
-        MemberInfo memberInfo = new MemberInfo();
-        memberInfo.setUserId(postDto.getUserId());
-        post.setMemberInfo(memberInfo);
+        // 변경: MemberInfo 객체 가져와서 설정
+        MemberInfo memberInfo = postDto.getMemberInfo();
+        if (memberInfo != null) {
+            post.setMemberInfo(memberInfo);
+        }
 
         Post savedPost = postRepository.save(post);
         return convertToDto(savedPost);
@@ -79,6 +86,13 @@ public class PostService {
         postDto.setPostCategory(post.getPostCategory());
         postDto.setPostViews(post.getPostViews());
         postDto.setPostDate(post.getPostDate());
+
+        // 변경: MemberInfo 객체 가져와서 설정
+        MemberInfo memberInfo = post.getMemberInfo();
+        if (memberInfo != null) {
+            postDto.setMemberInfo(memberInfo);
+        }
+
         return postDto;
     }
 }
