@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-
+//변경
 @Getter
 @Setter
 public class PostDto {

@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-
+//변경
     public List<PostDto> getAllPosts() {
         List<Post> posts = postRepository.findAll();
         List<PostDto> postDtoList = convertToDtoList(posts);

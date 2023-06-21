@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+//변경
 @Entity
 @Getter
 @Setter

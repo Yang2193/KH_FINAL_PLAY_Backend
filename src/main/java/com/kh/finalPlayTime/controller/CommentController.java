@@ -19,11 +19,11 @@ public class CommentController {
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
-    @PostMapping("/{postId}")
-    public ResponseEntity<CommentDto> createComment(@PathVariable Long postId, @RequestBody CommentDto commentDto) {
-        CommentDto createdComment = commentService.createComment(postId, commentDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
-    }
+//    @PostMapping("/{postId}")
+//    public ResponseEntity<CommentDto> createComment(@PathVariable Long postId, @RequestBody CommentDto commentDto) {
+//        CommentDto createdComment = commentService.createComment(postId, commentDto);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
+//    }
 
 
     @GetMapping("/{id}")
@@ -36,12 +36,10 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/post/{postId}")
-    public ResponseEntity<List<CommentDto>> getCommentsByPostId(@PathVariable Long postId) {
-
-
-        List<CommentDto> commentDtoList = commentService.getCommentsByPostId(postId);
-        return ResponseEntity.ok(commentDtoList);
+    @PostMapping("/{postId}")
+    public ResponseEntity<CommentDto> createComment(@PathVariable Long postId, @RequestBody CommentDto commentDto) {
+        CommentDto createdComment = commentService.createComment(postId, commentDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
     }
 
 }
