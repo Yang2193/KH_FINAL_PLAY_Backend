@@ -1,13 +1,14 @@
 package com.kh.finalPlayTime.service;
 
 import com.kh.finalPlayTime.dto.PostDto;
+import com.kh.finalPlayTime.entity.MemberInfo;
 import com.kh.finalPlayTime.entity.Post;
 import com.kh.finalPlayTime.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +49,13 @@ public class PostService {
 
     public PostDto addPost(PostDto postDto) {
         Post post = convertToPost(postDto);
+        post.setPostDate(LocalDateTime.now()); // 현재 시간 설정
+
+        // 변경: MemberInfo 객체 생성 및 설정
+        MemberInfo memberInfo = new MemberInfo();
+        memberInfo.setUserId(postDto.getUserId());
+        post.setMemberInfo(memberInfo);
+
         Post savedPost = postRepository.save(post);
         return convertToDto(savedPost);
     }
@@ -59,14 +67,12 @@ public class PostService {
         post.setPostImageUrl(postDto.getPostImageUrl());
         post.setPostCategory(postDto.getPostCategory());
         post.setPostViews(postDto.getPostViews());
-        post.setPostDate(postDto.getPostDate());
         return post;
     }
 
     private PostDto convertToDto(Post post) {
         PostDto postDto = new PostDto();
         postDto.setId(post.getId());
-        postDto.setMemberInfo(post.getMemberInfo());
         postDto.setPostTitle(post.getPostTitle());
         postDto.setPostContent(post.getPostContent());
         postDto.setPostImageUrl(post.getPostImageUrl());
@@ -76,5 +82,3 @@ public class PostService {
         return postDto;
     }
 }
-
-
