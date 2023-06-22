@@ -7,6 +7,7 @@ import com.kh.finalPlayTime.service.AuthService;
 import com.kh.finalPlayTime.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Member;
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -44,18 +47,24 @@ public class AuthController { // 로그인 회원가입 ID/PW 찾기 여기에�
     }
 
     @PostMapping("/loginTest")
-    public ResponseEntity<Boolean> memberLogin(HttpServletResponse response, @RequestBody Map<String, String> loginData) throws Exception {
+    public ResponseEntity<String> memberLogin(HttpServletResponse response, @RequestBody Map<String, String> loginData) throws Exception {
         String id = loginData.get("userId");
         String pwd = loginData.get("userPw");
-        if((boolean)authService.loginService(id, pwd).get("login")) {
+        if ((boolean) authService.loginService(id, pwd).get("login")) {
             log.info("로그인 성공해서 토큰 발급");
-            String token = (String)authService.loginService(id, pwd).get("token");
-            Cookie cookie = new Cookie("token", token);
-            cookie.setMaxAge(60*60);
+            String refreshToken = (String) authService.loginService(id, pwd).get("refreshToken");
+            String accessToken = (String) authService.loginService(id, pwd).get("accessToken");
+            Cookie cookie = new Cookie("refreshToken", refreshToken);
+            cookie.setMaxAge(60 * 60);
             cookie.setHttpOnly(true);
             cookie.setPath("/");
+            System.out.println("refreshtoken: " + refreshToken);
+            System.out.println("accessToken: " + accessToken);
             response.addCookie(cookie); // 응답에 쿠키 추가
-            return ResponseEntity.ok(true);
-        } else return ResponseEntity.ok(false);
+
+            return ResponseEntity.ok(accessToken);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }

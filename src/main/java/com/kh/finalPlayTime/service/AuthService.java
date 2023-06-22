@@ -88,6 +88,7 @@ public class AuthService {
             accessToken = accessToken.substring(7);
         }
         // 🔑토큰 유효한지 검증
+//        if (accessToken != null && tokenProvider.validateToken(accessToken)) {
         if (accessToken != null && tokenProvider.validateToken(accessToken)) {
             String userId = userDetails.getUsername();
             MemberInfo member = memberInfoRepository.findByUserId(userId)
@@ -97,25 +98,28 @@ public class AuthService {
             throw new TokenExpiredException("토큰이 만료됐습니다. Refresh Token 재발급이 필요합니다.");
         }
     }
-
-    public Map<?,?> loginService(String id, String pwd) throws Exception {
-        Map<String, Object> map = new HashMap<>();
-        Optional<MemberInfo> loginMember = memberInfoRepository.findByUserId(id);
-        if(loginMember.isEmpty()) {
+// 20230623 jwt 쿠키 테스트
+public Map<String, Object> loginService(String id, String pwd) throws Exception {
+    Map<String, Object> map = new HashMap<>();
+    Optional<MemberInfo> loginMember = memberInfoRepository.findByUserId(id);
+    System.out.println(loginMember);
+    if (loginMember.isEmpty()) {
+        map.put("login", false);
+    } else {
+        if (!passwordEncoder.matches(pwd, loginMember.get().getUserPw())) {
             map.put("login", false);
         } else {
-            if(!passwordEncoder.matches(pwd, loginMember.get().getUserPw())) {
-                map.put("login", false);
+            if (loginMember.get().getAuthority() == Authority.ROLE_USER) {
+                String accesstoken = jwtController.accessTokenCreate(loginMember.get().getUserId().toString());
+                map.put("accessToken", accesstoken);
+                String refreshtoken = jwtController.refreshTokenCreate(loginMember.get().getUserId().toString());
+                map.put("refreshToken", refreshtoken);
+                map.put("login", true);
             } else {
-                if(loginMember.get().getAuthority() != Authority.ROLE_USER) {
-                    String token = jwtController.tokenCreate(loginMember.get().getUserId().toString());
-                    map.put("token", token);
-                    map.put("login", true);
-                }
-                else map.put("login", false);
+                map.put("login", false);
             }
         }
-        return map;
     }
-
+    return map;
+}
 }
