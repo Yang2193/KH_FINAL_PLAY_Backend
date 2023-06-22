@@ -2,10 +2,12 @@ package com.kh.finalPlayTime.service;
 
 import com.kh.finalPlayTime.dto.CommentDto;
 import com.kh.finalPlayTime.entity.Comment;
+import com.kh.finalPlayTime.entity.Post;
 import com.kh.finalPlayTime.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,46 +22,52 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
+    // 댓글 생성
     public CommentDto createComment(Long postId, CommentDto commentDto) {
         Comment comment = new Comment();
         comment.setCommentContent(commentDto.getCommentContent());
-        // 필요한 다른 속성들도 CommentDto에 맞게 매핑해주세요.
+        comment.setCommentDate(LocalDateTime.now()); // 현재 시간 설정
+
+        // postId 설정
+        Post post = new Post();
+        post.setId(postId);
+        comment.setPost(post);
 
         Comment savedComment = commentRepository.save(comment);
 
         CommentDto createdCommentDto = new CommentDto();
         createdCommentDto.setId(savedComment.getId());
         createdCommentDto.setCommentContent(savedComment.getCommentContent());
-        // 필요한 다른 속성들도 CommentDto에 맞게 매핑해주세요.
+        createdCommentDto.setCommentDate(savedComment.getCommentDate()); // 생성된 댓글의 시간 설정
 
         return createdCommentDto;
     }
-
+    // 댓글 수정
     public CommentDto updateComment(Long commentId, CommentDto commentDto) {
         Optional<Comment> commentOptional = commentRepository.findById(commentId);
         if (commentOptional.isPresent()) {
             Comment comment = commentOptional.get();
             comment.setCommentContent(commentDto.getCommentContent());
-            // 필요한 다른 속성들도 CommentDto에 맞게 업데이트해주세요.
 
             Comment updatedComment = commentRepository.save(comment);
 
             CommentDto updatedCommentDto = new CommentDto();
             updatedCommentDto.setId(updatedComment.getId());
             updatedCommentDto.setCommentContent(updatedComment.getCommentContent());
-            // 필요한 다른 속성들도 CommentDto에 맞게 업데이트해주세요.
 
             return updatedCommentDto;
         } else {
-            // 해당 commentId에 해당하는 댓글이 없는 경우에 대한 처리를 해주세요.
+            // 해당 commentId에 해당하는 댓글이 없는 경우
             return null;
         }
     }
 
+    // 댓글 삭제
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
     }
 
+    // 댓글 ID로 댓글 조회
     public CommentDto getCommentById(Long commentId) {
         Optional<Comment> commentOptional = commentRepository.findById(commentId);
         if (commentOptional.isPresent()) {
@@ -74,6 +82,7 @@ public class CommentService {
         }
     }
 
+    // 게시물 ID로 댓글 리스트 조회
     public List<CommentDto> getCommentsByPostId(Long postId) {
         List<Comment> comments = commentRepository.findByPostId(postId);
         List<CommentDto> commentDtoList = new ArrayList<>();
