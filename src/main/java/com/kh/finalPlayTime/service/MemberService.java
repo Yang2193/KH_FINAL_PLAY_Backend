@@ -59,22 +59,6 @@ public class MemberService {
         return result;
     }
 
-    // 아이디로 회원 조회
-//    public List<MemberDto> getMemberList(String userId) {
-//        List<MemberDto> memberDtoList = new ArrayList<>();
-//        List<MemberInfo> memberInfoList = memberInfoRepository.findByUserId(userId);
-//        for(MemberInfo info : memberInfoList) {
-//            MemberDto memberDto = new MemberDto();
-//            memberDto.setUserId(info.getUserId());
-//            memberDto.setUserPw(info.getUserPw());
-//            memberDto.setUserName(info.getUserName());
-//            memberDto.setUserPhone(info.getUserPhone());
-//            memberDto.setUserEmail(info.getUserEmail());
-//            memberDtoList.add(memberDto);
-//        }
-//        return memberDtoList;
-//    }
-
     public MemberDto getMemberList(String userId) {
         Optional<MemberInfo> optionalMemberInfo = memberInfoRepository.findByUserId(userId);
         MemberDto memberDto = new MemberDto();
@@ -92,53 +76,4 @@ public class MemberService {
         return memberDto;
     }
 
-//    // 로그인
-//    public boolean getLoginCheck(String userId, String userPw) {
-//        List<MemberInfo> memberInfoList = memberInfoRepository.findByUserIdAndUserPw(userId, userPw);
-//        for(MemberInfo info : memberInfoList) {
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    // 회원가입
-//    public boolean regMember(String userId, String userPwd, String userName, String userPhone, String userEmail) {
-//        MemberInfo memberInfo = new MemberInfo();
-//        memberInfo.setUserId(userId);
-//        memberInfo.setUserPw(userPwd);
-//        memberInfo.setUserName(userName);
-//        memberInfo.setUserPhone(userPhone);
-//        memberInfo.setUserEmail(userEmail);
-//        memberInfo.setJoinDate(LocalDateTime.now());
-//        MemberInfo rst = memberInfoRepository.save(memberInfo);
-//        log.warn(rst.toString());
-//        return true;
-//    }
-
-    //Token 적용 새 회원가입 메소드
-    public MemberDto signup(MemberDto memberDto){
-        if(memberInfoRepository.existsByUserId(memberDto.getUserId())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
-        }
-
-        MemberInfo memberInfo = memberDto.toMember(passwordEncoder);
-        return MemberDto.of(memberInfoRepository.save(memberInfo));
-    }
-
-    // 로그인 시 토큰 발급
-    public TokenDto login(MemberDto memberDto){
-        UsernamePasswordAuthenticationToken authenticationToken = memberDto.toAuthentication();
-
-        Authentication authentication = null;
-        try {
-            authentication = managerBuilder.getObject().authenticate(authenticationToken);
-            System.out.println("인증 된거냐?");
-            return tokenProvider.generateTokenDto(authentication);
-
-        } catch (Exception e) {
-            System.out.println("인증 실패: " + e.getMessage());
-            e.printStackTrace();
-            return tokenProvider.generateTokenDto(authentication);
-        }
-    }
 }

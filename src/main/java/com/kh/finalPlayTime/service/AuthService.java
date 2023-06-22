@@ -55,14 +55,18 @@ public class AuthService {
         if (loginMember.getAuthority().equals(Authority.ROLE_ADMIN)) {
             try {
                 Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
-                return tokenProvider.generateTokenDto(authentication);
+                TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+                tokenDto.setAuthority(String.valueOf(Authority.ROLE_ADMIN));
+                return tokenDto;
             } catch (AuthenticationException e) {
                 throw e;
             }
         } else if (loginMember.getAuthority().equals(Authority.ROLE_USER)) {
             try {
                 Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
-                return tokenProvider.generateTokenDto(authentication);
+                TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+                tokenDto.setAuthority(String.valueOf(Authority.ROLE_USER));
+                return tokenDto;
             } catch (AuthenticationException e) {
                 throw e;
             }

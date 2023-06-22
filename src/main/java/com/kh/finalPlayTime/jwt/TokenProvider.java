@@ -32,6 +32,7 @@ public class TokenProvider {
     private static final String BEARER_TYPE = "bearer";
     //토큰 만료시간 설정. (현재 30분, 로그인 해도 30분 지나면 로그인 해제됨.)
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;
+    //    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 30; //테스트용 30초 만료
     //Refresh Token 설정
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7L * 24 * 60 * 60 * 1000;
     private final Key key;
@@ -43,7 +44,7 @@ public class TokenProvider {
         this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
 
-    // 토큰 생성
+    // 토큰 생성(최초 로그인 시, AccessToken과 RefreshToken 동시발급)
     public TokenDto generateTokenDto(Authentication authentication) {
 
         String authorities = authentication.getAuthorities().stream()
@@ -84,6 +85,36 @@ public class TokenProvider {
                 .tokenExpiresIn(tokenExpiresIn.getTime())
                 .build();
     }
+
+    //리프레쉬 토큰을 확인하고 AccessToken만 재발급 해주는 코드
+    public TokenDto generateAccessTokenDto(Authentication authentication) {
+
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();
+
+
+        Date tokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+
+        System.out.println(tokenExpiresIn);
+
+        String accessToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authorities)
+                .setExpiration(tokenExpiresIn)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+
+        return TokenDto.builder()
+                .grantType(BEARER_TYPE)
+                .accessToken(accessToken)
+                .tokenExpiresIn(tokenExpiresIn.getTime())
+                .build();
+    }
+
+
 
     //권한에 대해 인증을 하는 부분
     public Authentication getAuthentication(String accessToken) {
