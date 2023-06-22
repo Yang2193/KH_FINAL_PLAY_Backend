@@ -34,6 +34,7 @@ public class MyPageController {
         }
         // 여기서 적절한 로직을 사용하여 필요한 PostDto를 선택하거나 가공할 수 있습니다.
         PostDto selectedPost = memberPosts.get(0);
+        System.out.println(selectedPost);
         return ResponseEntity.ok(selectedPost);
     }
 }

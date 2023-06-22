@@ -2,6 +2,7 @@ package com.kh.finalPlayTime.service;
 
 import antlr.Token;
 import com.kh.finalPlayTime.constant.Authority;
+import com.kh.finalPlayTime.controller.JwtController;
 import com.kh.finalPlayTime.dto.MemberDto;
 import com.kh.finalPlayTime.dto.TokenDto;
 import com.kh.finalPlayTime.entity.MemberInfo;
@@ -20,6 +21,9 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -30,6 +34,7 @@ public class AuthService {
     private final MemberInfoRepository memberInfoRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final JwtController jwtController;
 
     public MemberDto signup(MemberDto memberDto){
         if(memberInfoRepository.existsByUserId(memberDto.getUserId())) {
@@ -93,5 +98,24 @@ public class AuthService {
         }
     }
 
+    public Map<?,?> loginService(String id, String pwd) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        Optional<MemberInfo> loginMember = memberInfoRepository.findByUserId(id);
+        if(loginMember.isEmpty()) {
+            map.put("login", false);
+        } else {
+            if(!passwordEncoder.matches(pwd, loginMember.get().getUserPw())) {
+                map.put("login", false);
+            } else {
+                if(loginMember.get().getAuthority() != Authority.ROLE_USER) {
+                    String token = jwtController.tokenCreate(loginMember.get().getUserId().toString());
+                    map.put("token", token);
+                    map.put("login", true);
+                }
+                else map.put("login", false);
+            }
+        }
+        return map;
+    }
 
 }
