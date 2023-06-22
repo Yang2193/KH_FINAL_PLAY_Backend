@@ -30,11 +30,11 @@ public class AuthController { // 로그인 회원가입 ID/PW 찾기 여기에�
         return ResponseEntity.ok(authService.signup(memberDto));
     }
 
-//    @PostMapping("/login") // 로그인시 ID, PW 일치 시 TRUE와 토큰을 함께 반환
-//    public ResponseEntity<TokenDto> getToken(@RequestBody MemberDto memberDto) {
-//        TokenDto tokenDto = authService.login(memberDto);
-//        return ResponseEntity.ok(tokenDto);
-//    }
+    @PostMapping("/login") // 로그인시 ID, PW 일치 시 TRUE와 토큰을 함께 반환
+    public ResponseEntity<TokenDto> getToken(@RequestBody MemberDto memberDto) {
+        TokenDto tokenDto = authService.login(memberDto);
+        return ResponseEntity.ok(tokenDto);
+    }
 
     // AccessToken 재발급 코드
     @PostMapping("/token")
@@ -43,7 +43,7 @@ public class AuthController { // 로그인 회원가입 ID/PW 찾기 여기에�
         return ResponseEntity.ok(renewDto);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/loginTest")
     public ResponseEntity<Boolean> memberLogin(HttpServletResponse response, @RequestBody Map<String, String> loginData) throws Exception {
         String id = loginData.get("userId");
         String pwd = loginData.get("userPw");
