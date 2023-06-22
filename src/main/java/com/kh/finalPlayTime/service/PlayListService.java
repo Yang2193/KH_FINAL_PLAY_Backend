@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,8 +21,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PlayListService {
     private final PlayInfoRepository pir;
+    //공연 종료일이 현재 날짜를 지나지 않은 목록만 출력
     public List<PlayInfoDto> getPlayList(){
-        List<PlayInfo> plays = pir.findAll();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        String currentDate = LocalDate.now().format(formatter);
+
+        List<PlayInfo> plays = pir.findByPeriodEndGreaterThan(currentDate);
         List<PlayInfoDto> playInfoDtoList = new ArrayList<>();
         for(PlayInfo e : plays){
             PlayInfoDto playInfoDto = new PlayInfoDto();
