@@ -24,7 +24,7 @@ public class AuthController { // 로그인 회원가입 ID/PW 찾기 여기에�
         return ResponseEntity.ok(authService.signup(memberDto));
     }
 
-    @PostMapping("/login") // 로그인시 ID, PW 일치 시 TRUE와 토큰을 함께 반환하게 하고, 불일치 시 FALSE만 반환하게 하는 방법 찾기
+    @PostMapping("/login") // 로그인시 ID, PW 일치 시 TRUE와 토큰을 함께 반환
     public ResponseEntity<TokenDto> getToken(@RequestBody MemberDto memberDto) {
         TokenDto tokenDto = authService.login(memberDto);
         return ResponseEntity.ok(tokenDto);
@@ -33,8 +33,7 @@ public class AuthController { // 로그인 회원가입 ID/PW 찾기 여기에�
     // AccessToken 재발급 코드
     @PostMapping("/token")
     public ResponseEntity<TokenDto> renewAccessToken(@RequestBody TokenDto requestDto){
-        String newAccessToken = tokenService.createNewAccessToken(requestDto.getRefreshToken());
-        TokenDto renewDto = new TokenDto(newAccessToken);
+        TokenDto renewDto = tokenService.createNewAccessToken(requestDto.getRefreshToken());
         return ResponseEntity.ok(renewDto);
     }
 }

@@ -1,4 +1,5 @@
 package com.kh.finalPlayTime.service;
+import com.kh.finalPlayTime.dto.TokenDto;
 import com.kh.finalPlayTime.entity.MemberInfo;
 import com.kh.finalPlayTime.jwt.TokenProvider;
 import com.kh.finalPlayTime.repository.MemberInfoRepository;
@@ -26,11 +27,11 @@ public class TokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberInfoRepository memberInfoRepository;
 
-    public String createNewAccessToken(String refreshToken) {
+    public TokenDto createNewAccessToken(String refreshToken) {
         if(!tokenProvider.validateToken(refreshToken)) {
             throw new TokenExpiredException("Refresh Token이 만료되었습니다. 재발급이 필요합니다.");
         }
-        //리프레쉬 토큰으로 액세스토큰을 재발급 받을 때, 리프레쉬 토큰도 재발급받는 방법을 생각해봐야한다.
+        //리프레쉬 토큰으로 액세스토큰을 재발급 받음 , 리프레쉬 토큰은 로그인할 때 항상 재발급 되어서 업데이트 됨.
 
         String userId = refreshTokenRepository.findByRefreshToken(refreshToken).get().getUserId();
         MemberInfo member = memberInfoRepository.findByUserId(userId).get();
@@ -43,6 +44,6 @@ public class TokenService {
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
 
-        return tokenProvider.generateTokenDto(authentication).getAccessToken();
+        return tokenProvider.generateAccessTokenDto(authentication);
     }
 }
