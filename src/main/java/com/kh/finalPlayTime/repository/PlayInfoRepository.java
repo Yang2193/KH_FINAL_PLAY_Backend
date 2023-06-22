@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Repository
-public interface PlayInfoRepository extends JpaRepository <PlayInfo, Long>{
+public interface PlayInfoRepository extends JpaRepository <PlayInfo, String>{
     Optional<PlayInfo> findByPlayId(String playId);
 
     List<PlayInfo> findByTitleContaining(String title);
     List<PlayInfo> findByPeriodEndGreaterThan(String date);
-
+    void deleteByPlayId(String playId);
 }

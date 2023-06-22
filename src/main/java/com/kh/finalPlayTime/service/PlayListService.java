@@ -41,6 +41,7 @@ public class PlayListService {
         return playInfoDtoList;
     }
 
+
     //제목검색 메소드 -> AND로 수정할 지 말지 고민 중. 배우도 추가하면 OR로 쓰는 레포지토리 메소드로 바꿀 듯?
     public List<PlayInfoDto> searchPlayList(String[] keywords){
         List<PlayInfo> list = new ArrayList<>();

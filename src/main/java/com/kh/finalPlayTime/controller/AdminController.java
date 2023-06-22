@@ -1,6 +1,7 @@
 package com.kh.finalPlayTime.controller;
 
 import com.kh.finalPlayTime.dto.MemberDto;
+import com.kh.finalPlayTime.dto.PlayInfoDto;
 import com.kh.finalPlayTime.dto.PostDto;
 import com.kh.finalPlayTime.service.AdminService;
 import com.kh.finalPlayTime.service.PostService;
@@ -9,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -72,6 +74,33 @@ public class AdminController {
         PostDto postDto = postService.getPostById(postId);
         model.addAttribute("dto", postDto);
         return "admin/post/postDetail";
+    }
+
+    // 공연 관리 컨트롤러 부분
+
+    // 공연 목록 불러오고, 검색하기
+    @GetMapping("/playlist")
+    public String adminPlaylist(@RequestParam(required = false) String title, Model model){
+        List<PlayInfoDto> list;
+
+        if (title != null) {
+            // playId가 제공된 경우, 해당 회원만 필터링
+            list = adminService.getPlayListAll().stream()
+                    .filter(play -> play.getTitle().contains(title))
+                    .collect(Collectors.toList());
+        } else {
+            // playId가 제공되지 않은 경우, 모든 회원 조회
+            list = adminService.getPlayListAll();
+        }
+
+        model.addAttribute("list", list);
+        return "admin/play/playlist";
+    }
+
+    @GetMapping("/playlist/delete")
+    public String adminDeletePlay(@RequestParam String playId){
+        adminService.deletePlay(playId);
+        return "redirect:/admin/playlist";
     }
 
 
