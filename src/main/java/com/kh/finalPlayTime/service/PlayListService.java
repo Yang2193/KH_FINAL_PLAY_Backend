@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,8 +21,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PlayListService {
     private final PlayInfoRepository pir;
+    //공연 종료일이 현재 날짜를 지나지 않은 목록만 출력
     public List<PlayInfoDto> getPlayList(){
-        List<PlayInfo> plays = pir.findAll();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        String currentDate = LocalDate.now().format(formatter);
+
+        List<PlayInfo> plays = pir.findByPeriodEndGreaterThan(currentDate);
         List<PlayInfoDto> playInfoDtoList = new ArrayList<>();
         for(PlayInfo e : plays){
             PlayInfoDto playInfoDto = new PlayInfoDto();
@@ -34,6 +40,7 @@ public class PlayListService {
         }
         return playInfoDtoList;
     }
+
 
     //제목검색 메소드 -> AND로 수정할 지 말지 고민 중. 배우도 추가하면 OR로 쓰는 레포지토리 메소드로 바꿀 듯?
     public List<PlayInfoDto> searchPlayList(String[] keywords){

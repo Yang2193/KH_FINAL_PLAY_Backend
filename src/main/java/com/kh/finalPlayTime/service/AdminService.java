@@ -2,14 +2,13 @@ package com.kh.finalPlayTime.service;
 
 import com.kh.finalPlayTime.constant.Authority;
 import com.kh.finalPlayTime.dto.MemberDto;
+import com.kh.finalPlayTime.dto.PlayInfoDto;
 import com.kh.finalPlayTime.dto.PostDto;
 import com.kh.finalPlayTime.entity.MemberInfo;
+import com.kh.finalPlayTime.entity.PlayInfo;
 import com.kh.finalPlayTime.entity.Post;
 import com.kh.finalPlayTime.jwt.TokenProvider;
-import com.kh.finalPlayTime.repository.CommentRepository;
-import com.kh.finalPlayTime.repository.MemberInfoRepository;
-import com.kh.finalPlayTime.repository.PostRepository;
-import com.kh.finalPlayTime.repository.TheaterRepository;
+import com.kh.finalPlayTime.repository.*;
 import com.kh.finalPlayTime.utils.TokenExpiredException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +26,13 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
-public class AdminService {
+public class AdminService { // Admin에서만 필요한 Service는 AdminService에서 관리 그 외의 것은 가져오기.
     private final MemberInfoRepository memberInfoRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final TheaterRepository theaterRepository;
     private final PostService postService;
+    private final PlayInfoRepository playInfoRepository;
     // 전체 회원 조회
     public List<MemberDto> getMemberList() {
         List<MemberDto> memberDtoList = new ArrayList<>();
@@ -64,6 +64,30 @@ public class AdminService {
             memberDto.setMessage("아이디가 존재하지 않습니다.");
         }
         return memberDto;
+    }
+
+    //공연 관련
+    //전체 공연 목록 출력
+    public List<PlayInfoDto> getPlayListAll(){
+        List<PlayInfo> plays = playInfoRepository.findAll();
+        List<PlayInfoDto> playInfoDtoList = new ArrayList<>();
+        for(PlayInfo e : plays){
+            PlayInfoDto playInfoDto = new PlayInfoDto();
+            playInfoDto.setPlayId(e.getPlayId());
+            playInfoDto.setTitle(e.getTitle());
+            playInfoDto.setImageUrl(e.getImageUrl());
+            playInfoDto.setPeriodStart(e.getPeriodStart());
+            playInfoDto.setPeriodEnd(e.getPeriodEnd());
+            playInfoDto.setTheaterName(e.getTheaterName());
+            playInfoDtoList.add(playInfoDto);
+        }
+        return playInfoDtoList;
+    }
+
+    // 연극 삭제
+
+    public void deletePlay(String playId){
+        playInfoRepository.deleteByPlayId(playId);
     }
 
 

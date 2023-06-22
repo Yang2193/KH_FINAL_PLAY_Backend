@@ -26,7 +26,6 @@ public class PlayInfo {
     private String periodEnd;
     @Column(length = 500)
     private String imageUrl;
-    @Column(length = 30)
     private String theaterName;
 
     //DB 저장
