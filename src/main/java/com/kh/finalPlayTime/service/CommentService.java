@@ -43,6 +43,7 @@
 
             MemberInfo memberInfo = new MemberInfo();
             memberInfo.setUserId(commentDto.getUserId());
+            memberInfo.setUserNickname(commentDto.getNickname());
             comment.setMemberInfo(memberInfo);
 
             comment.setCommentContent(commentDto.getCommentContent());
@@ -111,6 +112,8 @@
                 commentDto.setId(comment.getId());
                 commentDto.setCommentContent(comment.getCommentContent());
                 commentDto.setCommentDate(comment.getCommentDate());
+                commentDto.setUserId(comment.getMemberInfo().getUserId());
+                commentDto.setNickname(comment.getMemberInfo().getUserNickname()); // 닉네임 설정
                 commentDtoList.add(commentDto);
             }
             return commentDtoList;
