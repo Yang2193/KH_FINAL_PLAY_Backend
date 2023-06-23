@@ -27,32 +27,6 @@ public class MemberController { // 마이페이지 전용 컨트롤러로 활용
         this.memberService = memberService;
     }
 
-    @PostMapping("/find/id")
-    public ResponseEntity<String> findMemberId(@RequestBody Map<String, String> findIdData) {
-        String userName = findIdData.get("userName");
-        String userEmail = findIdData.get("userEmail");
-        System.out.println(userName + " " + userEmail);
-        String memberDto = memberService.findId(userName, userEmail);
-        if (memberDto == null) {
-            // 아이디를 찾지 못한 경우
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        // 아이디를 찾은 경우
-        return ResponseEntity.ok(memberDto);
-    }
-
-    @PostMapping("/find/pw")
-    public ResponseEntity<String> findMemberPw(@RequestBody Map<String, String> findPwData) {
-        String userId = findPwData.get("userId");
-        String userName = findPwData.get("userName");
-        String userEmail = findPwData.get("userEmail");
-        System.out.println(userId + " " + userName + " " + userEmail);
-        String memberDto = memberService.findPw(userId, userName, userEmail);
-        if (memberDto == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.ok(memberDto);
-    }
 
     @PostMapping("/userinfo")
     public ResponseEntity<MemberDto> getUserInfo(@RequestBody Map<String, String> getUserData) {
