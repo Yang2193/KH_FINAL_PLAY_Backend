@@ -42,6 +42,7 @@ public class Post {
     @Column(name = "post_date")
     private LocalDateTime postDate;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
     private List<Comment> commentList = new ArrayList<>();
+
 }

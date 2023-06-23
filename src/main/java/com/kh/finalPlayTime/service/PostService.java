@@ -68,7 +68,7 @@ public class PostService {
         return convertToDto(savedPost);
     }
 
-    private Post convertToPost(PostDto postDto) {
+    public Post convertToPost(PostDto postDto) {
         Post post = new Post();
         post.setPostTitle(postDto.getPostTitle());
         post.setPostContent(postDto.getPostContent());
