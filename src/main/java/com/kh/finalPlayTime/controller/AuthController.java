@@ -1,6 +1,5 @@
 package com.kh.finalPlayTime.controller;
 
-import antlr.Token;
 import com.kh.finalPlayTime.dto.MemberDto;
 import com.kh.finalPlayTime.dto.TokenDto;
 import com.kh.finalPlayTime.service.AuthService;
@@ -9,15 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Member;
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -39,32 +31,29 @@ public class AuthController { // 로그인 회원가입 ID/PW 찾기 여기에�
         return ResponseEntity.ok(tokenDto);
     }
 
+    @PostMapping("/find/id")
+    public ResponseEntity<String> findMemberId(@RequestBody Map<String, String> findIdData) {
+        String userName = findIdData.get("userName");
+        String userEmail = findIdData.get("userEmail");
+        String memberDto = authService.findId(userName, userEmail);
+        if (memberDto == null) {
+            // 아이디를 찾지 못한 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        // 아이디를 찾은 경우
+        return ResponseEntity.ok(memberDto);
+    }
+
+    @PostMapping("/find/pw")
+    public ResponseEntity<?> findMemberPw(@RequestParam("email") String email) throws Exception {
+        authService.updatePasswordWithAuthKey(email);
+        return new ResponseEntity<>("임시비밀번호 발송 완료", HttpStatus.OK);
+    }
+
     // AccessToken 재발급 코드
     @PostMapping("/token")
     public ResponseEntity<TokenDto> renewAccessToken(@RequestBody TokenDto requestDto){
         TokenDto renewDto = tokenService.createNewAccessToken(requestDto.getRefreshToken());
         return ResponseEntity.ok(renewDto);
-    }
-
-    @PostMapping("/loginTest")
-    public ResponseEntity<String> memberLogin(HttpServletResponse response, @RequestBody Map<String, String> loginData) throws Exception {
-        String id = loginData.get("userId");
-        String pwd = loginData.get("userPw");
-        if ((boolean) authService.loginService(id, pwd).get("login")) {
-            log.info("로그인 성공해서 토큰 발급");
-            String refreshToken = (String) authService.loginService(id, pwd).get("refreshToken");
-            String accessToken = (String) authService.loginService(id, pwd).get("accessToken");
-            Cookie cookie = new Cookie("refreshToken", refreshToken);
-            cookie.setMaxAge(60 * 60);
-            cookie.setHttpOnly(true);
-            cookie.setPath("/");
-            System.out.println("refreshtoken: " + refreshToken);
-            System.out.println("accessToken: " + accessToken);
-            response.addCookie(cookie); // 응답에 쿠키 추가
-
-            return ResponseEntity.ok(accessToken);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
     }
 }

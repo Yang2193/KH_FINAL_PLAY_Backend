@@ -34,7 +34,7 @@ public class AuthService {
     private final MemberInfoRepository memberInfoRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final JwtController jwtController;
+    private final EmailService emailService;
 
     public MemberDto signup(MemberDto memberDto){
         if(memberInfoRepository.existsByUserId(memberDto.getUserId())) {
@@ -98,28 +98,40 @@ public class AuthService {
             throw new TokenExpiredException("토큰이 만료됐습니다. Refresh Token 재발급이 필요합니다.");
         }
     }
-// 20230623 jwt 쿠키 테스트
-public Map<String, Object> loginService(String id, String pwd) throws Exception {
-    Map<String, Object> map = new HashMap<>();
-    Optional<MemberInfo> loginMember = memberInfoRepository.findByUserId(id);
-    System.out.println(loginMember);
-    if (loginMember.isEmpty()) {
-        map.put("login", false);
-    } else {
-        if (!passwordEncoder.matches(pwd, loginMember.get().getUserPw())) {
-            map.put("login", false);
-        } else {
-            if (loginMember.get().getAuthority() == Authority.ROLE_USER) {
-                String accesstoken = jwtController.accessTokenCreate(loginMember.get().getUserId().toString());
-                map.put("accessToken", accesstoken);
-                String refreshtoken = jwtController.refreshTokenCreate(loginMember.get().getUserId().toString());
-                map.put("refreshToken", refreshtoken);
-                map.put("login", true);
-            } else {
-                map.put("login", false);
-            }
+    // 아이디 찾기
+    public String findId(String userName, String userEmail) {
+        MemberInfo member = memberInfoRepository.findByUserNameAndUserEmail(userName, userEmail);
+        if (member == null) {
+            System.out.println("아이디를 찾지 못함");
+            return null; // 아이디를 찾지 못한 경우 null을 반환하거나 원하는 대응을 수행
         }
+        MemberDto memberDto = new MemberDto();
+        memberDto.setUserId(member.getUserId());
+        System.out.println("Test :" + memberDto.getUserId());
+        String result = member.getUserId();
+        return result;
     }
-    return map;
-}
+
+    // 패스워드 찾기
+    public String findPw(String userId, String userName, String userEmail) {
+        MemberInfo member = memberInfoRepository.findByUserIdAndUserNameAndUserEmail(userId, userName, userEmail);
+        if (member == null) {
+            System.out.println("아이디를 찾지 못함");
+            return null; // 아이디를 찾지 못한 경우 null을 반환하거나 원하는 대응을 수행
+        }
+        MemberDto memberDto = new MemberDto();
+        memberDto.setUserPw(member.getUserPw());
+        System.out.println("Test :" + memberDto.getUserPw());
+        String result = member.getUserPw();
+        return result;
+    }
+
+    public void updatePasswordWithAuthKey(String to) throws Exception {
+        String ePw = emailService.sendPasswordAuthKey(to);
+        MemberInfo memberInfo = memberInfoRepository.findByUserEmail(to)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+        memberInfo.setUserPw(ePw);
+        System.out.println(ePw);
+        memberInfoRepository.save(memberInfo);
+    }
 }
