@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 public class PostDto {
     private Long id;
+    private String userId;
     private MemberInfo memberInfo;
     private String postTitle;
     private String postContent;
