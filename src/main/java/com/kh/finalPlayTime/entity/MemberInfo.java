@@ -21,28 +21,24 @@ public class MemberInfo {
     private String userName;
     @Column(length = 30)
     private String userNickname;
-
     @Column(length = 50)
     private String userEmail;
-    @Column(length = 20)
+    @Column(length = 30)
     private String userPhone;
     @Column
     private LocalDateTime joinDate;
     @Enumerated(EnumType.STRING)
     private Authority authority; // USER인지 ADMIN인지 구분하기 위해 부여.
-
     //빌더
     @Builder
-    public MemberInfo(String user, String email, String password, String name, String nickname, String phone, LocalDateTime joinDate, Authority authority) {
-
-        this.userId = user;
-        this.userPw = password;
-        this.userName = name;
-        this.userNickname = nickname;
-        this.userEmail = email;
-        this.userPhone = phone;
+    public MemberInfo(String userId, String userPw, String userName, String userNickname, String userEmail, String userPhone, LocalDateTime joinDate, Authority authority) {
+        this.userId = userId;
+        this.userPw = userPw;
+        this.userName = userName;
+        this.userNickname = userNickname;
+        this.userEmail = userEmail;
+        this.userPhone = userPhone;
         this.joinDate = joinDate;
         this.authority = authority;
     }
-
 }

@@ -130,8 +130,8 @@ public class AuthService {
         String ePw = emailService.sendPasswordAuthKey(to);
         MemberInfo memberInfo = memberInfoRepository.findByUserEmail(to)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
-        memberInfo.setUserPw(ePw);
-        System.out.println(ePw);
+        String encodePassword = passwordEncoder.encode(ePw);
+        memberInfo.setUserPw(encodePassword);
         memberInfoRepository.save(memberInfo);
     }
 }
