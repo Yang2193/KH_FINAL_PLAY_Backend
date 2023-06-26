@@ -76,30 +76,16 @@
                 return null;
             }
         }
-
-
-        // 댓글 삭제
-        public void deleteComment(Long commentId) {
-            Optional<Comment> commentOptional = commentRepository.findById(commentId);
-            if (commentOptional.isPresent()) {
-                Comment comment = commentOptional.get();
-
-                // 현재 로그인된 사용자의 ID 가져오기
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                String currentUserId = authentication.getName();
-
-                // 댓글 작성자의 ID와 현재 사용자의 ID 비교
-                if (comment.getMemberInfo().getUserId().equals(currentUserId)) {
-                    commentRepository.deleteById(commentId);
-                } else {
-                    // 댓글 작성자와 현재 사용자가 일치하지 않을 경우 예외 처리
-                    throw new IllegalArgumentException("댓글 삭제 권한이 없습니다.");
-                }
-            } else {
-                // 해당 commentId에 해당하는 댓글이 없는 경우
-                throw new IllegalArgumentException("삭제할 댓글이 존재하지 않습니다.");
+        //댓글 삭제
+        public boolean deleteComment(Long commentId) {
+            try {
+                commentRepository.deleteById(commentId);
+                return true; // 삭제 성공
+            } catch (Exception e) {
+                return false; // 삭제 실패
             }
         }
+
 
 
         // 게시물 ID로 댓글 리스트 조회
