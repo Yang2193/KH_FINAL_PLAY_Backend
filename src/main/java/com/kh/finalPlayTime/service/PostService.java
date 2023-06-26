@@ -5,6 +5,7 @@ import com.kh.finalPlayTime.entity.MemberInfo;
 import com.kh.finalPlayTime.entity.Post;
 import com.kh.finalPlayTime.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +21,10 @@ public class PostService {
 
     // 모든 게시물 조회 기능
     public List<PostDto> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAll(Sort.by(Sort.Direction.DESC, "postDate")); // postDate를 기준으로 내림차순 정렬
         List<PostDto> postDtoList = convertToDtoList(posts);
         return postDtoList;
     }
-
     // 게시물 ID로 게시물 조회 기능
     public PostDto getPostById(Long postId) {
         Post post = postRepository.findById(postId).orElse(null);
@@ -111,5 +111,9 @@ public class PostService {
             postDtos.add(postDto);
         }
         return postDtos;
+    }
+    // 게시물 삭제 기능
+    public void deletePostById(Long postId) {
+        postRepository.deleteById(postId);
     }
 }
