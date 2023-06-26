@@ -25,20 +25,20 @@ public class MemberDto {
 
     public MemberInfo toMember(PasswordEncoder passwordEncoder) {
         return MemberInfo.builder()
-                .user(userId)
-                .email(userEmail)
-                .password(passwordEncoder.encode(userPw))
-                .name(userName)
-                .nickname(userNickname)
-                .phone(userPhone)
+                .userId(userId)
+                .userPw(passwordEncoder.encode(userPw))
+                .userName(userName)
+                .userNickname(userNickname)
+                .userEmail(userEmail)
+                .userPhone(userPhone)
                 .joinDate(LocalDateTime.now())
-                .authority(Authority.ROLE_USER)
                 .build();
     }
+
+
     public UsernamePasswordAuthenticationToken toAuthentication() {
         return new UsernamePasswordAuthenticationToken(userId, userPw);
     }
-
     public static MemberDto of(MemberInfo member) {
         return MemberDto.builder()
                 .message(member.getUserId() + "님의 회원가입을 환영합니다.")
