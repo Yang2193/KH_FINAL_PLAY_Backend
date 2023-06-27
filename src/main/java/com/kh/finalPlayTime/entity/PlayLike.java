@@ -21,7 +21,7 @@ public class PlayLike {
     private PlayInfo playInfo;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private MemberInfo memberInfo;
 
 }
