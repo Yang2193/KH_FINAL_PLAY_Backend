@@ -14,7 +14,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -23,17 +22,16 @@ public class PlayLikeService {
     private final PlayInfoRepository playInfoRepository;
     private final MemberInfoRepository memberInfoRepository;
 
-
-
 // 엔티티로 조회 (회원정보 연극정보의 모든 컬럼이 객체로 조회됨)
     public List<PlayLike> findPlayLikeList (String userId) {
-
         return playLikeRepository.findByMemberInfoUserId(userId);
     }
+
 // 디티오로 조회(원하는 dto 컬럼들만 조회됨)
     public List<PlayLikeDto> findPlayLikeList2(String userId) {
         List<PlayLike> playLikes = playLikeRepository.findByMemberInfoUserId(userId);
         List<PlayLikeDto> playLikeDTOs = new ArrayList<>();
+
         for (PlayLike playLike : playLikes) {
             PlayLikeDto playLikeDTO = new PlayLikeDto();
             playLikeDTO.setPlayLikeId(playLike.getId());

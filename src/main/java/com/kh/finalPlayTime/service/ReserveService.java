@@ -22,16 +22,15 @@ public class ReserveService {
     private final PlayInfoRepository playInfoRepository;
     private final MemberInfoRepository memberInfoRepository;
 
-
-    // 엔티티로 조회 (회원정보 연극정보의 모든 컬럼이 객체로 조회됨)
-    public List<Reserve> findRes (String userId) {
+    // 엔티티로 조회
+    public List<Reserve> findReserveList (String userId) {
         return reserveRepository.findByMemberInfoUserId(userId);
     }
-
+    // Dto로 조회
     public List<ReserveDto> findReserveInfo(String userId) {
-
         List<Reserve> reserveList = reserveRepository.findByMemberInfoUserId(userId);
         List<ReserveDto> reserveDtos = new ArrayList<>();
+
         for (Reserve reserve : reserveList) {
             ReserveDto reserveDto = new ReserveDto();
             reserveDto.setReserveId(reserve.getId());
@@ -44,8 +43,8 @@ public class ReserveService {
         }
         return reserveDtos;
     }
-
-    public Reserve addReserve(String seatPosition,String seeDate,String reserveDate,String userId,String playId ) {
+    // 예매 등록
+    public ReserveDto addReserve(String userId,String playId,String reserveDate, String seeDate,String seatPosition ){
         Reserve reserve = new Reserve();
         // 회원 정보 설정
         Optional<MemberInfo> memberInfoOptional = memberInfoRepository.findByUserId(userId);
@@ -62,20 +61,19 @@ public class ReserveService {
         }
         PlayInfo playInfo = playInfoOptional.get();
         reserve.setPlayInfo(playInfo);
-        reserve.setSeatPosition(seatPosition);
         reserve.setReserveDate(reserveDate);
         reserve.setSeeDate(seeDate);
+        reserve.setSeatPosition(seatPosition);
+        reserveRepository.save(reserve);
 
-        Reserve savedReserve = reserveRepository.save(reserve);
-//        ReserveDto savedReserveDto = new ReserveDto();
-//        savedReserveDto.setReserveId(savedReserve.getReserveId());
-//        savedReserveDto.setSeeDate(savedReserve.getSeeDate());
-//        savedReserveDto.setReserveDate(savedReserve.getReserveDate());
-//        savedReserveDto.setSeatPosition(savedReserve.getSeatPosition());
-//        savedReserveDto.setUserId(savedReserve.getMemberInfo().getUserId());
-//        savedReserveDto.setPlayId(savedReserve.getPlayInfo().getPlayId());
-
-        return savedReserve;
+        ReserveDto reserveDto =new ReserveDto();
+        reserveDto.setReserveDate(reserve.getReserveDate());
+        reserveDto.setReserveId(reserve.getId());
+        reserveDto.setUserId(reserve.getMemberInfo().getUserId());
+        reserveDto.setPlayId(reserve.getPlayInfo().getPlayId());
+        reserveDto.setSeeDate(reserve.getSeeDate());
+        reserveDto.setSeatPosition(reserve.getSeatPosition());
+        return reserveDto;
     }
 }
 
