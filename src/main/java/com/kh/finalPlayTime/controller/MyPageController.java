@@ -21,6 +21,12 @@ import java.util.Map;
 public class MyPageController {
     @Autowired
     private PostService postService;
+    @Autowired
+    private MemberService memberService;
+
+    public MyPageController(MemberService memberService) {
+        this.memberService = memberService;
+    }
     public MyPageController(PostService postService) {
         this.postService = postService;
     }
@@ -34,5 +40,17 @@ public class MyPageController {
         }
         System.out.println(memberPosts);
         return ResponseEntity.ok(memberPosts);
+    }
+
+    @PostMapping("/edit")
+    public ResponseEntity<Boolean> updateMemberInfo(@RequestBody Map<String, String> updateData) {
+        String userId = updateData.get("userId");
+        String userPw = updateData.get("userPw");
+        String userNickname = updateData.get("userNickname");
+        String userName = updateData.get("userName");
+        String userPhone = updateData.get("userPhone");
+        String userEmail = updateData.get("userEmail");
+        System.out.println("컨트롤러: " + userId + userPw + userNickname + userName + userPhone + userEmail);
+        return ResponseEntity.ok(memberService.updateMemberInfo(userId,userPw,userNickname,userName,userPhone,userEmail));
     }
 }

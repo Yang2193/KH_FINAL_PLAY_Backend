@@ -33,7 +33,7 @@ public class MemberService {
     public MemberDto getMemberInfo(String userId) {
         Optional<MemberInfo> optionalMemberInfo = memberInfoRepository.findByUserId(userId);
         MemberDto memberDto = new MemberDto();
-        if(optionalMemberInfo.isPresent()) {
+        if (optionalMemberInfo.isPresent()) {
             MemberInfo memberInfo = optionalMemberInfo.get();
             memberDto.setUserId(memberInfo.getUserId());
             memberDto.setUserPw(memberInfo.getUserPw());
@@ -43,7 +43,7 @@ public class MemberService {
             memberDto.setJoinDate(memberInfo.getJoinDate());
             memberDto.setUserEmail(memberInfo.getUserEmail());
             memberDto.setMessage("조회 성공");
-        } else{
+        } else {
             memberDto.setMessage("아이디가 존재하지 않습니다.");
         }
         return memberDto;
@@ -53,7 +53,7 @@ public class MemberService {
         List<MemberDto> list = new ArrayList<>();
         Optional<MemberInfo> optionalMemberInfo = memberInfoRepository.findByUserId(userId);
         MemberDto memberDto = new MemberDto();
-        if(optionalMemberInfo.isPresent()) {
+        if (optionalMemberInfo.isPresent()) {
             MemberInfo memberInfo = optionalMemberInfo.get();
             memberDto.setUserId(memberInfo.getUserId());
             memberDto.setUserPw(memberInfo.getUserPw());
@@ -64,9 +64,25 @@ public class MemberService {
             memberDto.setUserEmail(memberInfo.getUserEmail());
             list.add(memberDto);
             memberDto.setMessage("조회 성공");
-        } else{
+        } else {
             memberDto.setMessage("아이디가 존재하지 않습니다.");
         }
         return list;
+    }
+
+    public boolean updateMemberInfo(String userId, String userPw, String userNickname, String userName, String userPhone, String userEmail) {
+        System.out.println(userId + userPw + userNickname + userName + userPhone + userEmail);
+        return memberInfoRepository.findByUserId(userId)
+                .map(member -> {
+                    member.setUserPw(passwordEncoder.encode(userPw));
+                    member.setUserNickname(userNickname);
+                    member.setUserName(userName);
+                    member.setUserPhone(userPhone);
+                    member.setUserEmail(userEmail);
+                    MemberInfo saveMember = memberInfoRepository.save(member);
+                    log.info(saveMember.toString());
+                    return true;
+                })
+                .orElseThrow(() -> new RuntimeException("해당 userId를 가진 멤버를 찾을 수 없습니다."));
     }
 }
