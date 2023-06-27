@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MemberInfoRepository extends JpaRepository<MemberInfo, Long> {
+public interface MemberInfoRepository extends JpaRepository<MemberInfo, String> {
     Optional<MemberInfo> findByUserId(String userId);
     Optional<MemberInfo> findByUserEmail(String userEmail);
     List<MemberInfo> findAll();

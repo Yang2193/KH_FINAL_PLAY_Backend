@@ -14,23 +14,26 @@ import java.time.LocalDateTime;
 public class Reserve {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reserveId;
+    @Column(name = "reserve_id")
+    private Long id; // 예매아이디
 
     @ManyToOne
-    @JoinColumn(name = "play_ID")
-    private PlayInfo playInfo;
+    @JoinColumn(name = "play_id")
+    private PlayInfo playInfo; // 연극 정보
 
     @ManyToOne
-    @JoinColumn(name = "userId")
-    private MemberInfo memberInfo;
+    @JoinColumn(name = "user_id")
+    private MemberInfo memberInfo; // 회원정보
 
-    @OneToOne // Payment 엔티티와 일대일 매핑
-    @JoinColumn(name = "payment_id") // 결제번호(FK)
-    private Payment payment;
-
-    private LocalDateTime reserveDate; // 예매 일시
-    private LocalDateTime seeDate; // 공연 관람일
-    private int seatNum; // 좌석 번호
+//    @OneToOne // Payment 엔티티와 일대일 매핑
+//    @JoinColumn(name = "payment_id") // 결제번호(FK)
+//    private Payment payment;
+    @Column(name = "reserve_date")
+    private String reserveDate; // 예매 일시
+    @Column(name = "see_date")
+    private String seeDate; // 공연 관람일
+//    private int seatNum; // 좌석 번호
+    @Column(name = "seat_position")
     private String seatPosition; // 예매한 좌석 위치
 
 }

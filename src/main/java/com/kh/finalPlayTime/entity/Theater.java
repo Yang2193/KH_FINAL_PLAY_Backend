@@ -1,10 +1,12 @@
 package com.kh.finalPlayTime.entity;
 
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.List;
 @ToString
 @RequiredArgsConstructor
 public class Theater {
+
     @Id
     @Column(name = "theater_id")
     private String theaterId; // 공연장 ID
@@ -26,6 +29,9 @@ public class Theater {
     private String theaterCall; // 연락처
     private String theaterWeb; // 홈페이지
 
+    @OneToOne(mappedBy = "theater")
+    private Seat seat;
+
     // api DB에 저장
     public Theater (JSONObject item) {
         this.theaterId = item.getString("mt10id");
@@ -34,5 +40,6 @@ public class Theater {
         this.theaterSeats = item.getInt("seatscale");
         this.theaterCall = item.getString("telno");
         this.theaterWeb = item.getString("relateurl");
+
     }
 }

@@ -1,7 +1,9 @@
 package com.kh.finalPlayTime.service;
 
 import com.kh.finalPlayTime.dto.TheaterDto;
+import com.kh.finalPlayTime.entity.Seat;
 import com.kh.finalPlayTime.entity.Theater;
+import com.kh.finalPlayTime.repository.SeatRepository;
 import com.kh.finalPlayTime.repository.TheaterRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
@@ -31,6 +33,8 @@ public class TheaterApiService {
 
     @Autowired
     TheaterRepository theaterRepository;
+    @Autowired
+    SeatRepository seatRepository; // 나중에 여기서 Seat 세이브 되게 수정
 
     public String TheaterDetailApi(@PathVariable String mt10id) {
 
@@ -74,6 +78,15 @@ public class TheaterApiService {
             // DB에 저장하기
             Theater theater = new Theater(item);
             theaterRepository.save(theater);
+
+            log.info(theater.getTheaterId());
+            System.out.println(seatRepository.existsByTheaterTheaterId(theater.getTheaterId()));
+            if(!seatRepository.existsByTheaterTheaterId(theater.getTheaterId())){
+                Seat seat = new Seat();
+                seat.setTheater(theater);
+                seatRepository.save(seat);
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();

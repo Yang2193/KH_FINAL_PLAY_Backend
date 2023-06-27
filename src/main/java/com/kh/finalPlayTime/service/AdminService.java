@@ -1,12 +1,8 @@
 package com.kh.finalPlayTime.service;
 
 import com.kh.finalPlayTime.constant.Authority;
-import com.kh.finalPlayTime.dto.MemberDto;
-import com.kh.finalPlayTime.dto.PlayInfoDto;
-import com.kh.finalPlayTime.dto.PostDto;
-import com.kh.finalPlayTime.entity.MemberInfo;
-import com.kh.finalPlayTime.entity.PlayInfo;
-import com.kh.finalPlayTime.entity.Post;
+import com.kh.finalPlayTime.dto.*;
+import com.kh.finalPlayTime.entity.*;
 import com.kh.finalPlayTime.jwt.TokenProvider;
 import com.kh.finalPlayTime.repository.*;
 import com.kh.finalPlayTime.utils.TokenExpiredException;
@@ -15,12 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -33,6 +29,9 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
     private final TheaterRepository theaterRepository;
     private final PostService postService;
     private final PlayInfoRepository playInfoRepository;
+    private final SeatRepository seatRepository;
+    private final SeatNumbersRepository seatNumbersRepository;
+    private final EntityManager entityManager;
     // 전체 회원 조회
     public List<MemberDto> getMemberList() {
         List<MemberDto> memberDtoList = new ArrayList<>();
@@ -89,6 +88,136 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
     public void deletePlay(String playId){
         playInfoRepository.deleteByPlayId(playId);
     }
+    //극장관리 컨트롤러 부분
+    //극장 목록 불러오기
+    public List<TheaterDto> getTheaterListAll(){
+        List<Theater> theaters = theaterRepository.findAll();
+        List<TheaterDto> theaterDtoList = new ArrayList<>();
+        for(Theater e : theaters){
+            TheaterDto dto = new TheaterDto();
+            dto.setTheaterId(e.getTheaterId());
+            dto.setTheaterName(e.getTheaterName());
+            dto.setTheaterAddr(e.getTheaterAddr());
+            dto.setTheaterCall(e.getTheaterCall());
+            dto.setTheaterWeb(e.getTheaterWeb());
+            dto.setTheaterSeats(e.getTheaterSeats());
+            theaterDtoList.add(dto);
+        }
+        return theaterDtoList;
+    }
+
+    //극장 좌석 불러오기
+    public SeatDto getSeat(String theaterId, String theaterName){
+        SeatDto seatDto = new SeatDto();
+        seatDto.setTheaterId(theaterId);
+        seatDto.setTheaterName(theaterName);
+
+        Optional<Seat> seatOptional = seatRepository.findByTheaterTheaterId(theaterId);
+
+        if(seatOptional.isPresent()){
+            Seat seat = seatOptional.get();
+            seatDto.setSeatId(seat.getSeatId());
+
+            List<SeatNumbers> seatNumbersList = seatNumbersRepository.findBySeatSeatId(seat.getSeatId());
+            seatDto.setSeatNumbers(seatNumbersList);
+
+        }
+        return seatDto;
+    }
+
+
+    public void createSeat(Map<String, String> seatInfo) {
+
+        Long seatId = Long.valueOf(seatInfo.get("seatId"));
+        String theaterId = seatInfo.get("theaterId");
+        String theaterName = seatInfo.get("theaterName");
+
+
+
+        Seat seat = new Seat();
+        seat.setSeatId(seatId);
+
+        //theater Id 설정
+        Theater theater = new Theater();
+        theater.setTheaterId(theaterId);
+        seat.setTheater(theater);
+
+        Map<String, Integer> seatMap = new HashMap<>();
+        Map<String, Integer[]> corridorMap = new HashMap<>();
+
+        // 기존 맵을 받아서 새로운 맵 생성
+        for (Map.Entry<String, String> entry : seatInfo.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            String prefix = "";
+
+            if (key.startsWith("seatNumbers.")) {
+                prefix = "seatNumbers.";
+            } else if (key.startsWith("corridorSeat.")) {
+                prefix = "corridorSeat.";
+            }
+
+            switch (prefix) {
+                case "seatNumbers.":
+                    String seatKey = key.replaceAll("seatNumbers.", "");
+                    Integer seatValue = Integer.valueOf(value);
+                    seatMap.put(seatKey, seatValue);
+                    break;
+                case "corridorSeat.":
+                    String corridorKey = key.replaceAll("corridorSeat.", "");
+                    String[] valueArr = value.split(",");
+                    Integer[] corridorValue = new Integer[valueArr.length];
+                    for (int i = 0; i < valueArr.length; i++) {
+                        corridorValue[i] = Integer.valueOf(valueArr[i].trim());
+                    }
+                    corridorMap.put(corridorKey, corridorValue);
+                    break;
+                default:
+                    // 처리할 접두사가 없는 경우
+                    break;
+            }
+        }
+        // 이걸 이용해 새 맵을 만들고 저장하자. 내일 여기서부터.
+
+// 좌석 번호 생성 및 저장
+        for (Map.Entry<String, Integer> entry : seatMap.entrySet()) {
+            String seatColumn = entry.getKey();
+            Integer seatCount = entry.getValue();
+
+            Integer[] corridorSeats = corridorMap.get(seatColumn);
+            if (corridorSeats == null) {
+                corridorSeats = new Integer[0];
+            }
+
+            for (int i = 1; i <= seatCount; i++) {
+                String seatNumber = seatColumn + i;
+                boolean isCorridorSeat = Arrays.asList(corridorSeats).contains(i);
+
+                if (isCorridorSeat) {
+                    seatNumber += "C";
+                }
+
+                SeatNumbers seatNumEntity = new SeatNumbers();
+                seatNumEntity.setSeatNumber(seatNumber);
+                seatNumEntity.setSeat(seat);
+                seat.getSeatNumbersList().add(seatNumEntity);
+                seatNumbersRepository.save(seatNumEntity);
+            }
+        }
+
+        seatRepository.save(seat);
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 

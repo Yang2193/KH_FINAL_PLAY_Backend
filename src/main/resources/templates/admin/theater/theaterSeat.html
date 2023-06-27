@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Theater Seat Management</title>
+</head>
+<body>
+<h1>Theater Seat Management</h1>
+
+<h2>Theater Information</h2>
+<p>Theater ID: <span th:text="${seatDto.theaterId}"></span></p>
+<p>Theater Name: <span th:text="${seatDto.theaterName}"></span></p>
+
+<h2>Seat Information</h2>
+<p>Seat ID: <span th:text="${seatDto.seatId}"></span></p>
+<p>Seat Numbers:</p>
+<ul>
+  <li th:each="seatNumber : ${seatDto.seatNumbers}" th:text="${seatNumber}"></li>
+</ul>
+
+<div th:if="${seatDto.seatId == null}">
+  <!-- seatId가 null인 경우 -->
+  <p>No seat information available.</p>
+</div>
+<div th:if="${seatDto.seatId != null}">
+  <div th:if="${seatDto.seatNumbers == null or seatDto.seatNumbers.size() == 0}">
+    <!-- 좌석 생성 폼 -->
+    <form th:action="@{/admin/createSeat}" method="post">
+      <input type="hidden" name="seatId" th:value="${seatDto.seatId}">
+      <input type="hidden" name="theaterId" th:value="${seatDto.theaterId}">
+      <input type="hidden" name="theaterName" th:value="${seatDto.theaterName}">
+
+      <button type="submit">Create Seats</button>
+    </form>
+  </div>
+  <div th:if="${seatDto.seatNumbers != null and seatDto.seatNumbers.size() > 0}">
+    <!-- 좌석 수정 폼 -->
+    <form th:action="@{/admin/editSeat}" method="post">
+      <input type="hidden" name="seatId" th:value="${seatDto.seatId}">
+      <input type="hidden" name="theaterId" th:value="${seatDto.theaterId}">
+      <input type="hidden" name="theaterName" th:value="${seatDto.theaterName}">
+      <input type="hidden" name="seatNumbers" th:value="${seatDto.seatNumbers}" th:with="seatNumbers=${seatDto.seatNumbers}">
+      <button type="submit">Edit Seats</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

@@ -1,21 +1,19 @@
 package com.kh.finalPlayTime.controller;
 
-import com.kh.finalPlayTime.dto.MemberDto;
-import com.kh.finalPlayTime.dto.PlayInfoDto;
-import com.kh.finalPlayTime.dto.PostDto;
+import com.kh.finalPlayTime.dto.*;
 import com.kh.finalPlayTime.service.AdminService;
 import com.kh.finalPlayTime.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequestMapping("/admin")
@@ -102,6 +100,60 @@ public class AdminController {
         adminService.deletePlay(playId);
         return "redirect:/admin/playlist";
     }
+
+    //극장 관리 컨트롤러
+    @GetMapping("/theater")
+    public String theaterList(@RequestParam(required = false) String name, Model model){
+        List<TheaterDto> list;
+        if(name != null){
+            //극장 이름이 제공된 경우
+            list = adminService.getTheaterListAll().stream()
+                    .filter(theater -> theater.getTheaterName().contains(name))
+                    .collect(Collectors.toList());
+        } else {
+            list = adminService.getTheaterListAll();
+        }
+        model.addAttribute("list", list);
+        return "admin/theater/theaterList";
+    }
+
+    @PostMapping("/seatManagement")
+    public String theaterSeatManagement(@RequestParam("id") String id,
+                                        @RequestParam("name") String name,
+                                        Model model) {
+        SeatDto seatDto = adminService.getSeat(id, name);
+
+        // 필요한 데이터를 Model 객체에 추가
+        model.addAttribute("seatDto", seatDto);
+
+
+
+        return "admin/theater/theaterSeat"; // 좌석 관리 페이지로
+    }
+
+    @PostMapping("/createSeat")
+    public String createSeat(@RequestParam("seatId") String seatId,
+                             @RequestParam("theaterId") String theaterId,
+                             @RequestParam("theaterName") String theaterName,
+                             Model model){
+        // 예시: 전달받은 정보를 다시 넘겨주기만 하는 경우
+        model.addAttribute("seatId", seatId);
+        model.addAttribute("theaterId", theaterId);
+        model.addAttribute("theaterName", theaterName);
+
+        return "admin/theater/createSeat";
+    }
+
+    @PostMapping("/createSeatStep2")
+    public String createSeatStep2(@RequestParam Map<String, String> seatInfo,
+                                  Model model) {
+        adminService.createSeat(seatInfo);
+        SeatDto seatDto = adminService.getSeat(seatInfo.get("theaterId"), seatInfo.get("theaterName"));
+        model.addAttribute("seatDto", seatDto);
+        return "admin/theater/theaterSeat";
+    }
+
+
 
 
 
