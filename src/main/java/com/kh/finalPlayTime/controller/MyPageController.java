@@ -26,14 +26,13 @@ public class MyPageController {
     }
 
     @PostMapping("/find/post")
-    public ResponseEntity<PostDto> getMemberPost(@RequestBody Map<String, String> getMemberPostData) {
+    public ResponseEntity<List<PostDto>> getMemberPost(@RequestBody Map<String, String> getMemberPostData) {
         String userId = getMemberPostData.get("userId");
         List<PostDto> memberPosts = postService.getMemberPosts(userId);
         if (memberPosts.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        // 여기서 적절한 로직을 사용하여 필요한 PostDto를 선택하거나 가공할 수 있습니다.
-        PostDto selectedPost = memberPosts.get(0);
-        return ResponseEntity.ok(selectedPost);
+        System.out.println(memberPosts);
+        return ResponseEntity.ok(memberPosts);
     }
 }

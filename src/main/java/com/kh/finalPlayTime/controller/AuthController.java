@@ -1,17 +1,18 @@
 package com.kh.finalPlayTime.controller;
 
-import antlr.Token;
 import com.kh.finalPlayTime.dto.MemberDto;
 import com.kh.finalPlayTime.dto.TokenDto;
 import com.kh.finalPlayTime.service.AuthService;
 import com.kh.finalPlayTime.service.TokenService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -28,6 +29,25 @@ public class AuthController { // 로그인 회원가입 ID/PW 찾기 여기에�
     public ResponseEntity<TokenDto> getToken(@RequestBody MemberDto memberDto) {
         TokenDto tokenDto = authService.login(memberDto);
         return ResponseEntity.ok(tokenDto);
+    }
+
+    @PostMapping("/find/id")
+    public ResponseEntity<String> findMemberId(@RequestBody Map<String, String> findIdData) {
+        String userName = findIdData.get("userName");
+        String userEmail = findIdData.get("userEmail");
+        String memberDto = authService.findId(userName, userEmail);
+        if (memberDto == null) {
+            // 아이디를 찾지 못한 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        // 아이디를 찾은 경우
+        return ResponseEntity.ok(memberDto);
+    }
+
+    @PostMapping("/find/pw")
+    public ResponseEntity<?> findMemberPw(@RequestParam("email") String email) throws Exception {
+        authService.updatePasswordWithAuthKey(email);
+        return new ResponseEntity<>("임시비밀번호 발송 완료", HttpStatus.OK);
     }
 
     // AccessToken 재발급 코드

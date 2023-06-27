@@ -5,31 +5,61 @@ import com.kh.finalPlayTime.entity.MemberInfo;
 import com.kh.finalPlayTime.entity.Post;
 import com.kh.finalPlayTime.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-//변경
+
+    // 모든 게시물 조회 기능
     public List<PostDto> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAll(Sort.by(Sort.Direction.DESC, "postDate")); // postDate를 기준으로 내림차순 정렬
         List<PostDto> postDtoList = convertToDtoList(posts);
-
-        for (PostDto postDto : postDtoList) {
-            System.out.println(postDto); // postDto를 출력
-        }
-
         return postDtoList;
     }
+    // 게시물 ID로 게시물 조회 기능
+    public PostDto getPostById(Long postId) {
+        Post post = postRepository.findById(postId).orElse(null);
+        if (post != null) {
+            return convertToDto(post);
+        }
+        return null;
+    }
 
+    // 게시물 조회수 증가 기능
+    public void increasePostViews(Long postId) {
+        Post post = postRepository.findById(postId).orElse(null);
+        if (post != null) {
+            post.setPostViews(post.getPostViews() + 1);
+        }
+    }
+
+    // 게시물 추가 기능
+    public PostDto addPost(PostDto postDto) {
+        Post post = convertToPost(postDto);
+        post.setPostDate(LocalDateTime.now()); // 현재 시간 설정
+
+        String userId = postDto.getUserId(); // userId 받아오기
+        if (userId != null) {
+            MemberInfo memberInfo = new MemberInfo();
+            memberInfo.setUserId(userId);
+            post.setMemberInfo(memberInfo);
+
+        }
+        Post savedPost = postRepository.save(post);
+        return convertToDto(savedPost);
+    }
+
+
+    // 게시물 목록을 Dto 리스트로 변환하는 기능
     private List<PostDto> convertToDtoList(List<Post> posts) {
         List<PostDto> dtoList = new ArrayList<>();
         for (Post post : posts) {
@@ -39,36 +69,8 @@ public class PostService {
         return dtoList;
     }
 
-    public PostDto getPostById(Long postId) {
-        Post post = postRepository.findById(postId).orElse(null);
-        if (post != null) {
-            return convertToDto(post);
-        }
-        return null;
-    }
-
-    public void increasePostViews(Long postId) {
-        Post post = postRepository.findById(postId).orElse(null);
-        if (post != null) {
-            post.setPostViews(post.getPostViews() + 1);
-        }
-    }
-
-    public PostDto addPost(PostDto postDto) {
-        Post post = convertToPost(postDto);
-        post.setPostDate(LocalDateTime.now()); // 현재 시간 설정
-
-        // 변경: MemberInfo 객체 가져와서 설정
-        MemberInfo memberInfo = postDto.getMemberInfo();
-        if (memberInfo != null) {
-            post.setMemberInfo(memberInfo);
-        }
-
-        Post savedPost = postRepository.save(post);
-        return convertToDto(savedPost);
-    }
-
-    private Post convertToPost(PostDto postDto) {
+    // Dto 객체를 Post 객체로 변환하는 기능
+    public Post convertToPost(PostDto postDto) {
         Post post = new Post();
         post.setPostTitle(postDto.getPostTitle());
         post.setPostContent(postDto.getPostContent());
@@ -78,6 +80,7 @@ public class PostService {
         return post;
     }
 
+    // Post 객체를 Dto 객체로 변환하는 기능
     private PostDto convertToDto(Post post) {
         PostDto postDto = new PostDto();
         postDto.setId(post.getId());
@@ -91,7 +94,7 @@ public class PostService {
         return postDto;
     }
 
-
+    // 특정 회원의 게시물 목록을 조회하는 기능
     public List<PostDto> getMemberPosts(String userId) {
         List<Post> posts = postRepository.findByMemberInfoUserId(userId);
         List<PostDto> postDtos = new ArrayList<>();
@@ -109,5 +112,8 @@ public class PostService {
         }
         return postDtos;
     }
-
+    // 게시물 삭제 기능
+    public void deletePostById(Long postId) {
+        postRepository.deleteById(postId);
+    }
 }

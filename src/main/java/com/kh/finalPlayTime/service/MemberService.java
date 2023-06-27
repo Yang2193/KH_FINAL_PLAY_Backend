@@ -30,36 +30,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
-
-    // 아이디 찾기
-    public String findId(String userName, String userEmail) {
-        MemberInfo member = memberInfoRepository.findByUserNameAndUserEmail(userName, userEmail);
-        if (member == null) {
-            System.out.println("아이디를 찾지 못함");
-            return null; // 아이디를 찾지 못한 경우 null을 반환하거나 원하는 대응을 수행
-        }
-        MemberDto memberDto = new MemberDto();
-        memberDto.setUserId(member.getUserId());
-        System.out.println("Test :" + memberDto.getUserId());
-        String result = member.getUserId();
-        return result;
-    }
-
-    // 패스워드 찾기
-    public String findPw(String userId, String userName, String userEmail) {
-        MemberInfo member = memberInfoRepository.findByUserIdAndUserNameAndUserEmail(userId, userName, userEmail);
-        if (member == null) {
-            System.out.println("아이디를 찾지 못함");
-            return null; // 아이디를 찾지 못한 경우 null을 반환하거나 원하는 대응을 수행
-        }
-        MemberDto memberDto = new MemberDto();
-        memberDto.setUserPw(member.getUserPw());
-        System.out.println("Test :" + memberDto.getUserPw());
-        String result = member.getUserPw();
-        return result;
-    }
-
-    public MemberDto getMemberList(String userId) {
+    public MemberDto getMemberInfo(String userId) {
         Optional<MemberInfo> optionalMemberInfo = memberInfoRepository.findByUserId(userId);
         MemberDto memberDto = new MemberDto();
         if(optionalMemberInfo.isPresent()) {
@@ -67,7 +38,9 @@ public class MemberService {
             memberDto.setUserId(memberInfo.getUserId());
             memberDto.setUserPw(memberInfo.getUserPw());
             memberDto.setUserName(memberInfo.getUserName());
+            memberDto.setUserNickname(memberInfo.getUserNickname());
             memberDto.setUserPhone(memberInfo.getUserPhone());
+            memberDto.setJoinDate(memberInfo.getJoinDate());
             memberDto.setUserEmail(memberInfo.getUserEmail());
             memberDto.setMessage("조회 성공");
         } else{
@@ -76,4 +49,24 @@ public class MemberService {
         return memberDto;
     }
 
+    public List<MemberDto> getMemberInfoList(String userId) {
+        List<MemberDto> list = new ArrayList<>();
+        Optional<MemberInfo> optionalMemberInfo = memberInfoRepository.findByUserId(userId);
+        MemberDto memberDto = new MemberDto();
+        if(optionalMemberInfo.isPresent()) {
+            MemberInfo memberInfo = optionalMemberInfo.get();
+            memberDto.setUserId(memberInfo.getUserId());
+            memberDto.setUserPw(memberInfo.getUserPw());
+            memberDto.setUserName(memberInfo.getUserName());
+            memberDto.setUserNickname(memberInfo.getUserNickname());
+            memberDto.setUserPhone(memberInfo.getUserPhone());
+            memberDto.setJoinDate(memberInfo.getJoinDate());
+            memberDto.setUserEmail(memberInfo.getUserEmail());
+            list.add(memberDto);
+            memberDto.setMessage("조회 성공");
+        } else{
+            memberDto.setMessage("아이디가 존재하지 않습니다.");
+        }
+        return list;
+    }
 }
