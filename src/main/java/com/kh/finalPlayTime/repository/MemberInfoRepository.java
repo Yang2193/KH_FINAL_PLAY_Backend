@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MemberInfoRepository extends JpaRepository<MemberInfo, Long> {
+public interface MemberInfoRepository extends JpaRepository<MemberInfo, String> {
     Optional<MemberInfo> findByUserId(String userId);
     List<MemberInfo> findAll();
     List<MemberInfo> findByUserIdAndUserPw(String userId, String userPw);
