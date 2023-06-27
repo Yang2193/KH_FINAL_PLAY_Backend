@@ -45,7 +45,7 @@ public class CommentController {
      * @param commentId  댓글 ID
      * @return 삭제 결과와 HTTP 상태 코드
      */
-    @DeleteMapping("/{commentId}")
+    @PostMapping("/delete/{commentId}")
     public ResponseEntity<String> deleteComment(@PathVariable Long commentId) {
         try {
             commentService.deleteComment(commentId);
@@ -56,4 +56,25 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 삭제 중 오류가 발생했습니다.");
         }
     }
+    //댓글 수정
+    @PostMapping("/{commentId}")
+    public ResponseEntity<String> updateComment(
+            @PathVariable Long commentId,
+            @RequestBody String newContent) {
+        try {
+            boolean isSuccess = commentService.updateComment(commentId, newContent);
+            if (isSuccess) {
+                System.out.println("댓글이 수정되었습니다.");
+                return ResponseEntity.ok("댓글이 수정되었습니다.");
+
+            } else {
+                System.out.println("댓글 수정 실패.");
+                return ResponseEntity.badRequest().body("댓글 수정에 실패했습니다.");
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
+
+

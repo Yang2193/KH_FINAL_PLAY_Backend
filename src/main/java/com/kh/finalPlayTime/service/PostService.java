@@ -21,10 +21,11 @@ public class PostService {
 
     // 모든 게시물 조회 기능
     public List<PostDto> getAllPosts() {
-        List<Post> posts = postRepository.findAll(Sort.by(Sort.Direction.DESC, "postDate")); // postDate를 기준으로 내림차순 정렬
+        List<Post> posts = postRepository.findAll(Sort.by(Sort.Direction.DESC, "postCategory", "postDate"));
         List<PostDto> postDtoList = convertToDtoList(posts);
         return postDtoList;
     }
+
     // 게시물 ID로 게시물 조회 기능
     public PostDto getPostById(Long postId) {
         Post post = postRepository.findById(postId).orElse(null);
@@ -52,6 +53,7 @@ public class PostService {
             MemberInfo memberInfo = new MemberInfo();
             memberInfo.setUserId(userId);
             post.setMemberInfo(memberInfo);
+
 
         }
         Post savedPost = postRepository.save(post);
