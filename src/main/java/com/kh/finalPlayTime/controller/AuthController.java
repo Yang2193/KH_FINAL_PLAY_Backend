@@ -45,9 +45,11 @@ public class AuthController { // 로그인 회원가입 ID/PW 찾기 여기에�
     }
 
     @PostMapping("/find/pw")
-    public ResponseEntity<?> findMemberPw(@RequestParam("email") String email) throws Exception {
-        authService.updatePasswordWithAuthKey(email);
-        return new ResponseEntity<>("임시비밀번호 발송 완료", HttpStatus.OK);
+    public ResponseEntity<Boolean> findMemberPw(@RequestBody Map<String, String> findPwData) throws Exception {
+        String userId = findPwData.get("userId");
+        String userName = findPwData.get("userName");
+        String userEmail = findPwData.get("userEmail");
+        return ResponseEntity.ok(authService.findPw(userId, userName, userEmail));
     }
 
     // AccessToken 재발급 코드

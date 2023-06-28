@@ -14,7 +14,7 @@ public interface MemberInfoRepository extends JpaRepository<MemberInfo, String> 
     List<MemberInfo> findAll();
     List<MemberInfo> findByUserIdAndUserPw(String userId, String userPw);
     MemberInfo findByUserNameAndUserEmail(String userName, String userEmail);
-    MemberInfo findByUserIdAndUserNameAndUserEmail(String userId, String userName, String userEmail);
+    Optional<MemberInfo> findByUserIdAndUserNameAndUserEmail(String userId, String userName, String userEmail);
 
     boolean existsByUserEmail(String email);
     boolean existsByUserId(String userId);
