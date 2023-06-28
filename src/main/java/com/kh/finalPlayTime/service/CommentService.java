@@ -58,24 +58,23 @@
         }
 
         // 댓글 수정
-        public CommentDto updateComment(Long commentId, CommentDto commentDto) {
-            Optional<Comment> commentOptional = commentRepository.findById(commentId);
-            if (commentOptional.isPresent()) {
-                Comment comment = commentOptional.get();
-                comment.setCommentContent(commentDto.getCommentContent());
-
-                Comment updatedComment = commentRepository.save(comment);
-
-                CommentDto updatedCommentDto = new CommentDto();
-                updatedCommentDto.setId(updatedComment.getId());
-                updatedCommentDto.setCommentContent(updatedComment.getCommentContent());
-
-                return updatedCommentDto;
+        public boolean updateComment(Long commentId, String newContent) {
+            Optional<Comment> optionalComment = commentRepository.findById(commentId);
+            if (optionalComment.isPresent()) {
+                Comment comment = optionalComment.get();
+                comment.setCommentContent(newContent);
+                comment.setCommentDate(LocalDateTime.now());
+                try {
+                    commentRepository.save(comment);
+                    return true; // 수정 성공
+                } catch (Exception e) {
+                    return false; // 수정 실패
+                }
             } else {
-                // 해당 commentId에 해당하는 댓글이 없는 경우
-                return null;
+                return false; // 해당 댓글이 존재하지 않음
             }
         }
+
         //댓글 삭제
         public boolean deleteComment(Long commentId) {
             try {
@@ -109,4 +108,4 @@
 
 
 
-    ///////변경 ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
+//0627민혁

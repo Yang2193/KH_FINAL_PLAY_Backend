@@ -31,6 +31,7 @@ public class MemberDto {
                 .userNickname(userNickname)
                 .userEmail(userEmail)
                 .userPhone(userPhone)
+                .authority(Authority.ROLE_USER)
                 .joinDate(LocalDateTime.now())
                 .build();
     }
