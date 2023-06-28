@@ -118,4 +118,19 @@ public class PostService {
     public void deletePostById(Long postId) {
         postRepository.deleteById(postId);
     }
+
+    //게시물 수정
+    public PostDto updatePost(Long postId, PostDto postDto) {
+        Post existingPost = postRepository.findById(postId).orElse(null);
+        if (existingPost != null) {
+            existingPost.setPostTitle(postDto.getPostTitle());
+            existingPost.setPostContent(postDto.getPostContent());
+            existingPost.setPostImageUrl(postDto.getPostImageUrl());
+
+            Post updatedPost = postRepository.save(existingPost);
+            return convertToDto(updatedPost);
+        }
+        return null;
+    }
+
 }

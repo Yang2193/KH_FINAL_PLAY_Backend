@@ -47,5 +47,14 @@ public class PostController {
         postService.deletePostById(postId);
         return ResponseEntity.ok("게시물 삭제 성공");
     }
-
+    //게시글 수정
+    @PostMapping("/update/{postId}")
+    public ResponseEntity<PostDto> updatePost(@PathVariable Long postId, @RequestBody PostDto postDto) {
+        PostDto updatedPost = postService.updatePost(postId, postDto);
+        if (updatedPost != null) {
+            return ResponseEntity.ok(updatedPost);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
