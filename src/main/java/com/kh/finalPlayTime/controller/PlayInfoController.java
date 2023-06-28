@@ -2,8 +2,10 @@ package com.kh.finalPlayTime.controller;
 
 import com.kh.finalPlayTime.dto.PlayDetailInfoDto;
 import com.kh.finalPlayTime.dto.PlayLikeDto;
+import com.kh.finalPlayTime.dto.ReserveDto;
 import com.kh.finalPlayTime.dto.TheaterDto;
 import com.kh.finalPlayTime.entity.PlayLike;
+import com.kh.finalPlayTime.entity.Reserve;
 import com.kh.finalPlayTime.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +48,7 @@ public class PlayInfoController {
     @GetMapping("/theater/{mt10id}")
     public List<TheaterDto> getTheaterDetail(@PathVariable String mt10id) {
         String result = theaterApiService.TheaterDetailApi(mt10id);
+
         return theaterApiService.detailFromJsonObj(result);
     }
     // 찜목록 엔티티로 불러오기
@@ -71,5 +74,22 @@ public class PlayInfoController {
     public ResponseEntity<String> deletePlayLike(@RequestBody PlayLikeDto playLikeDto) {
         playLikeService.deletePlayLike(playLikeDto.getUserId(), playLikeDto.getPlayId());
         return ResponseEntity.ok("Play like deleted");
+    }
+    private final ReserveService reserveService;
+
+    @GetMapping("/resList")
+    public ResponseEntity <List<Reserve>> getReserve(String id){
+        List<Reserve> list = reserveService.findReserveList(id);
+        return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+    @GetMapping("/reserveList")
+    public ResponseEntity <List<ReserveDto>> getReserveDto(String id){
+        List<ReserveDto> list = reserveService.findReserveInfo(id);
+        return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+    @PostMapping("/addReserve")
+    public ResponseEntity<ReserveDto> addReserve(@RequestBody ReserveDto reserveDto) {
+        ReserveDto addRes = reserveService.addReserve(reserveDto.getUserId(), reserveDto.getPlayId(),reserveDto.getReserveDate(),reserveDto.getSeeDate(),reserveDto.getSeatPosition());
+        return ResponseEntity.ok(addRes);
     }
 }

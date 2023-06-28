@@ -120,7 +120,7 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
 
             List<SeatNumbers> seatNumbersList = seatNumbersRepository.findBySeatSeatId(seat.getSeatId());
             seatDto.setSeatNumbers(seatNumbersList);
-
+            seatDto.convertSeatNumbersToMap();
         }
         return seatDto;
     }
@@ -207,6 +207,12 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
         }
 
         seatRepository.save(seat);
+    }
+
+    // seat 삭제 메소드
+    public void deleteSeat(String id){
+        Long seatId = Long.valueOf(id);
+        seatNumbersRepository.deleteBySeatSeatId(seatId);
     }
 
 

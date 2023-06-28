@@ -101,34 +101,33 @@ public class AuthService {
     // 아이디 찾기
     public String findId(String userName, String userEmail) {
         MemberInfo member = memberInfoRepository.findByUserNameAndUserEmail(userName, userEmail);
+        System.out.println("서비스 : " +userName + " " + userEmail + " " + member);
         if (member == null) {
             System.out.println("아이디를 찾지 못함");
             return null; // 아이디를 찾지 못한 경우 null을 반환하거나 원하는 대응을 수행
         }
         MemberDto memberDto = new MemberDto();
         memberDto.setUserId(member.getUserId());
-        System.out.println("Test :" + memberDto.getUserId());
+        System.out.println("서비스 ID 찾기 :" + memberDto.getUserId());
         String result = member.getUserId();
         return result;
     }
 
     // 패스워드 찾기
-    public String findPw(String userId, String userName, String userEmail) {
-        MemberInfo member = memberInfoRepository.findByUserIdAndUserNameAndUserEmail(userId, userName, userEmail);
-        if (member == null) {
-            System.out.println("아이디를 찾지 못함");
-            return null; // 아이디를 찾지 못한 경우 null을 반환하거나 원하는 대응을 수행
-        }
+    public boolean findPw(String userId, String userName, String userEmail) throws Exception{
+        Optional<MemberInfo> optionalMemberInfo = memberInfoRepository.findByUserIdAndUserNameAndUserEmail(userId, userName, userEmail);
         MemberDto memberDto = new MemberDto();
-        memberDto.setUserPw(member.getUserPw());
-        System.out.println("Test :" + memberDto.getUserPw());
-        String result = member.getUserPw();
-        return result;
+        if(optionalMemberInfo.isPresent()) {
+            updatePasswordWithAuthKey(userId, userEmail);
+            return true;
+        }
+        System.out.println("Auth서비스 : 데이터 없음.");
+        return false;
     }
 
-    public void updatePasswordWithAuthKey(String to) throws Exception {
-        String ePw = emailService.sendPasswordAuthKey(to);
-        MemberInfo memberInfo = memberInfoRepository.findByUserEmail(to)
+    public void updatePasswordWithAuthKey(String userId, String userEmail) throws Exception {
+        String ePw = emailService.sendPasswordAuthKey(userEmail);
+        MemberInfo memberInfo = memberInfoRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
         String encodePassword = passwordEncoder.encode(ePw);
         memberInfo.setUserPw(encodePassword);

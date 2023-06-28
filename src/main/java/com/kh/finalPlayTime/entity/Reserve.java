@@ -25,14 +25,12 @@ public class Reserve {
     @JoinColumn(name = "user_id")
     private MemberInfo memberInfo; // 회원정보
 
-//    @OneToOne // Payment 엔티티와 일대일 매핑
-//    @JoinColumn(name = "payment_id") // 결제번호(FK)
-//    private Payment payment;
     @Column(name = "reserve_date")
     private String reserveDate; // 예매 일시
+
     @Column(name = "see_date")
     private String seeDate; // 공연 관람일
-//    private int seatNum; // 좌석 번호
+
     @Column(name = "seat_position")
     private String seatPosition; // 예매한 좌석 위치
 
