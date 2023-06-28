@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface SeatNumbersRepository extends JpaRepository<SeatNumbers, Long> {
     List<SeatNumbers> findBySeatSeatId(Long seatId);
+    void deleteBySeatSeatId(Long seatId);
 }

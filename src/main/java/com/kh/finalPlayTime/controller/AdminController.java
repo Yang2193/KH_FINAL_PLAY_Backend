@@ -117,6 +117,7 @@ public class AdminController {
         return "admin/theater/theaterList";
     }
 
+    // 좌석 관리 컨트롤러
     @PostMapping("/seatManagement")
     public String theaterSeatManagement(@RequestParam("id") String id,
                                         @RequestParam("name") String name,
@@ -131,6 +132,7 @@ public class AdminController {
         return "admin/theater/theaterSeat"; // 좌석 관리 페이지로
     }
 
+    //좌석 생성 컨트롤러
     @PostMapping("/createSeat")
     public String createSeat(@RequestParam("seatId") String seatId,
                              @RequestParam("theaterId") String theaterId,
@@ -144,11 +146,24 @@ public class AdminController {
         return "admin/theater/createSeat";
     }
 
+    //좌석 생성 컨트롤러 2단계
     @PostMapping("/createSeatStep2")
     public String createSeatStep2(@RequestParam Map<String, String> seatInfo,
                                   Model model) {
         adminService.createSeat(seatInfo);
         SeatDto seatDto = adminService.getSeat(seatInfo.get("theaterId"), seatInfo.get("theaterName"));
+        model.addAttribute("seatDto", seatDto);
+        return "admin/theater/theaterSeat";
+    }
+
+    //좌석 삭제 컨트롤러
+    @PostMapping("/deleteSeat")
+    public String deleteSeat(@RequestParam("seatId") String seatId,
+                             @RequestParam("theaterId") String theaterId,
+                             @RequestParam("theaterName") String theaterName,
+                             Model model){
+        adminService.deleteSeat(seatId);
+        SeatDto seatDto = adminService.getSeat(theaterId, theaterName);
         model.addAttribute("seatDto", seatDto);
         return "admin/theater/theaterSeat";
     }

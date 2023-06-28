@@ -46,6 +46,7 @@ public class PlayInfoController {
     @GetMapping("/theater/{mt10id}")
     public List<TheaterDto> getTheaterDetail(@PathVariable String mt10id) {
         String result = theaterApiService.TheaterDetailApi(mt10id);
+
         return theaterApiService.detailFromJsonObj(result);
     }
     // 찜목록 엔티티로 불러오기
