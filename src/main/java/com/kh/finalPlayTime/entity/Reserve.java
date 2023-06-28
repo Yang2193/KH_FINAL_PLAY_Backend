@@ -26,7 +26,7 @@ public class Reserve {
     private MemberInfo memberInfo; // 회원정보
 
     @Column(name = "reserve_date")
-    private String reserveDate; // 예매 일시
+    private LocalDateTime reserveDate; // 예매 일시
 
     @Column(name = "see_date")
     private String seeDate; // 공연 관람일

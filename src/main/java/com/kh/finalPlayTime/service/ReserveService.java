@@ -1,16 +1,14 @@
 package com.kh.finalPlayTime.service;
 
 import com.kh.finalPlayTime.dto.ReserveDto;
-import com.kh.finalPlayTime.entity.MemberInfo;
-import com.kh.finalPlayTime.entity.PlayInfo;
-import com.kh.finalPlayTime.entity.Reserve;
-import com.kh.finalPlayTime.repository.MemberInfoRepository;
-import com.kh.finalPlayTime.repository.PlayInfoRepository;
-import com.kh.finalPlayTime.repository.ReserveRepository;
+import com.kh.finalPlayTime.dto.SeatDto;
+import com.kh.finalPlayTime.entity.*;
+import com.kh.finalPlayTime.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +19,8 @@ public class ReserveService {
     private final ReserveRepository reserveRepository;
     private final PlayInfoRepository playInfoRepository;
     private final MemberInfoRepository memberInfoRepository;
-
+    private final SeatRepository seatRepository;
+    private final SeatNumbersRepository seatNumbersRepository;
     // 엔티티로 조회
     public List<Reserve> findReserveList (String userId) {
         return reserveRepository.findByMemberInfoUserId(userId);
@@ -44,7 +43,7 @@ public class ReserveService {
         return reserveDtos;
     }
     // 예매 등록
-    public ReserveDto addReserve(String userId,String playId,String reserveDate, String seeDate,String seatPosition ){
+    public ReserveDto addReserve(String userId,String playId,String seeDate,String seatPosition ){
         Reserve reserve = new Reserve();
         // 회원 정보 설정
         Optional<MemberInfo> memberInfoOptional = memberInfoRepository.findByUserId(userId);
@@ -61,7 +60,7 @@ public class ReserveService {
         }
         PlayInfo playInfo = playInfoOptional.get();
         reserve.setPlayInfo(playInfo);
-        reserve.setReserveDate(reserveDate);
+        reserve.setReserveDate(LocalDateTime.now());
         reserve.setSeeDate(seeDate);
         reserve.setSeatPosition(seatPosition);
         reserveRepository.save(reserve);
@@ -74,6 +73,25 @@ public class ReserveService {
         reserveDto.setSeeDate(reserve.getSeeDate());
         reserveDto.setSeatPosition(reserve.getSeatPosition());
         return reserveDto;
+    }
+
+    // 좌석 조회
+    public SeatDto getSeat(String theaterId) {
+        SeatDto seatDto = new SeatDto();
+        seatDto.setTheaterId(theaterId);
+
+        Optional<Seat> seatOptional = seatRepository.findByTheaterTheaterId(theaterId);
+        if (seatOptional.isPresent()) {
+            Seat seat = seatOptional.get();
+            seatDto.setSeatId(seat.getSeatId());
+            seatDto.setTheaterName(seat.getTheater().getTheaterName());
+
+            List<SeatNumbers> seatNumbersList = seatNumbersRepository.findBySeatSeatId(seat.getSeatId());
+            seatDto.setSeatNumbers(seatNumbersList);
+            seatDto.convertSeatNumbersToMap();
+        }
+
+        return seatDto;
     }
 }
 

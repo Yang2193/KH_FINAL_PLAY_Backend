@@ -1,9 +1,6 @@
 package com.kh.finalPlayTime.controller;
 
-import com.kh.finalPlayTime.dto.PlayDetailInfoDto;
-import com.kh.finalPlayTime.dto.PlayLikeDto;
-import com.kh.finalPlayTime.dto.ReserveDto;
-import com.kh.finalPlayTime.dto.TheaterDto;
+import com.kh.finalPlayTime.dto.*;
 import com.kh.finalPlayTime.entity.PlayLike;
 import com.kh.finalPlayTime.entity.Reserve;
 import com.kh.finalPlayTime.service.*;
@@ -27,6 +24,7 @@ public class PlayInfoController {
     private final PlayDetailInfoApiService detailApiService;
     private final TheaterApiService theaterApiService;
     private final PlayLikeService playLikeService;
+    private final ReserveService reserveService;
 
     //선택한 연극 상세정보 찾기
     @GetMapping("/{mt20id}")
@@ -75,21 +73,30 @@ public class PlayInfoController {
         playLikeService.deletePlayLike(playLikeDto.getUserId(), playLikeDto.getPlayId());
         return ResponseEntity.ok("Play like deleted");
     }
-    private final ReserveService reserveService;
 
+    // 예매 엔티티로 조회
     @GetMapping("/resList")
     public ResponseEntity <List<Reserve>> getReserve(String id){
         List<Reserve> list = reserveService.findReserveList(id);
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
+    // 예매 dto로 조회
     @GetMapping("/reserveList")
     public ResponseEntity <List<ReserveDto>> getReserveDto(String id){
         List<ReserveDto> list = reserveService.findReserveInfo(id);
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
+    // 예매내역 등록
     @PostMapping("/addReserve")
     public ResponseEntity<ReserveDto> addReserve(@RequestBody ReserveDto reserveDto) {
-        ReserveDto addRes = reserveService.addReserve(reserveDto.getUserId(), reserveDto.getPlayId(),reserveDto.getReserveDate(),reserveDto.getSeeDate(),reserveDto.getSeatPosition());
+        ReserveDto addRes = reserveService.addReserve(reserveDto.getUserId(), reserveDto.getPlayId(),reserveDto.getSeeDate(),reserveDto.getSeatPosition());
         return ResponseEntity.ok(addRes);
     }
+    @GetMapping("/selSeat")
+    public ResponseEntity<Map<String,List<String>>> getSeatInfo (String id){
+        SeatDto seatDto = reserveService.getSeat(id);
+        Map<String,List<String>> seat = seatDto.getSeatMap();
+        return new ResponseEntity<>(seat,HttpStatus.OK);
+    }
+
 }
