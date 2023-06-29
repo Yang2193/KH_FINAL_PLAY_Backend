@@ -18,7 +18,6 @@ public class SeatDto {
     private String theaterName;
     private List<SeatNumbers> seatNumbers;
     private Map<String, List<String>> seatMap;
-
     public void convertSeatNumbersToMap() {
         List<String> seatNumberList = seatNumbers.stream()
                 .map(SeatNumbers::getSeatNumber)
