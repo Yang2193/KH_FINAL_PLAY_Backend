@@ -1,6 +1,8 @@
 package com.kh.finalPlayTime.controller;
 
+import com.kh.finalPlayTime.dto.CommentDto;
 import com.kh.finalPlayTime.dto.PostDto;
+import com.kh.finalPlayTime.service.CommentService;
 import com.kh.finalPlayTime.service.MemberService;
 import com.kh.finalPlayTime.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ public class MyPageController {
     private PostService postService;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private CommentService commentService;
 
     public MyPageController(MemberService memberService) {
         this.memberService = memberService;
@@ -30,16 +34,27 @@ public class MyPageController {
     public MyPageController(PostService postService) {
         this.postService = postService;
     }
+    public MyPageController(CommentService commentService) { this.commentService = commentService; }
 
-    @PostMapping("/find/post")
+    @PostMapping("/post")
     public ResponseEntity<List<PostDto>> getMemberPost(@RequestBody Map<String, String> getMemberPostData) {
         String userId = getMemberPostData.get("userId");
         List<PostDto> memberPosts = postService.getMemberPosts(userId);
         if (memberPosts.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        System.out.println(memberPosts);
         return ResponseEntity.ok(memberPosts);
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<List<CommentDto>> getMemberComment(@RequestBody Map<String, String> getMemberCommentData) {
+        String userId = getMemberCommentData.get("userId");
+        System.out.println(userId);
+        List<CommentDto> memberComments = commentService.getMemberCommentUserId(userId);
+        if(memberComments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(memberComments);
     }
 
     @PostMapping("/edit")

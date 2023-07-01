@@ -26,12 +26,13 @@ public class Reserve {
     private MemberInfo memberInfo; // 회원정보
 
     @Column(name = "reserve_date")
-    private String reserveDate; // 예매 일시
+    private LocalDateTime reserveDate; // 예매 일시
 
     @Column(name = "see_date")
     private String seeDate; // 공연 관람일
 
-    @Column(name = "seat_position")
-    private String seatPosition; // 예매한 좌석 위치
+    @ManyToOne
+    @JoinColumn(name = "seatNum_Id")
+    private SeatNumbers seatNumbers; // 좌석 정보
 
 }

@@ -103,6 +103,24 @@
             }
             return commentDtoList;
         }
+
+        // 유저 ID로 댓글 리스트 조회
+        public List<CommentDto> getMemberCommentUserId(String userId) {
+            List<Comment> comments = commentRepository.findByMemberInfoUserId(userId);
+            List<CommentDto> commentDtoList = new ArrayList<>();
+            CommentDto commentDto = null;
+            for (Comment comment : comments) {
+                commentDto = new CommentDto();
+                commentDto.setId(comment.getId());
+                commentDto.setPostId(comment.getPost().getId());
+                commentDto.setCommentContent(comment.getCommentContent());
+                commentDto.setCommentDate(comment.getCommentDate());
+                commentDto.setUserId(comment.getMemberInfo().getUserId());
+                commentDto.setNickname(comment.getMemberInfo().getUserNickname());
+                commentDtoList.add(commentDto);
+            }
+            return commentDtoList;
+        }
     }
 
 

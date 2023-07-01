@@ -1,11 +1,9 @@
 package com.kh.finalPlayTime.controller;
 
-import com.kh.finalPlayTime.dto.PlayDetailInfoDto;
-import com.kh.finalPlayTime.dto.PlayLikeDto;
-import com.kh.finalPlayTime.dto.ReserveDto;
-import com.kh.finalPlayTime.dto.TheaterDto;
+import com.kh.finalPlayTime.dto.*;
 import com.kh.finalPlayTime.entity.PlayLike;
 import com.kh.finalPlayTime.entity.Reserve;
+import com.kh.finalPlayTime.entity.SeatNumbers;
 import com.kh.finalPlayTime.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +25,8 @@ public class PlayInfoController {
     private final PlayDetailInfoApiService detailApiService;
     private final TheaterApiService theaterApiService;
     private final PlayLikeService playLikeService;
+    private final ReserveService reserveService;
+
 
     //선택한 연극 상세정보 찾기
     @GetMapping("/{mt20id}")
@@ -75,21 +75,28 @@ public class PlayInfoController {
         playLikeService.deletePlayLike(playLikeDto.getUserId(), playLikeDto.getPlayId());
         return ResponseEntity.ok("Play like deleted");
     }
-    private final ReserveService reserveService;
-
+    // 예매 조회 엔티티
     @GetMapping("/resList")
     public ResponseEntity <List<Reserve>> getReserve(String id){
         List<Reserve> list = reserveService.findReserveList(id);
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
-    @GetMapping("/reserveList")
-    public ResponseEntity <List<ReserveDto>> getReserveDto(String id){
-        List<ReserveDto> list = reserveService.findReserveInfo(id);
-        return new ResponseEntity<>(list,HttpStatus.OK);
+//    // 예매 조회 Dto
+//    @GetMapping("/reserveList")
+//    public ResponseEntity <List<ReserveDto>> getReserveDto(String id){
+//        List<ReserveDto> list = reserveService.findReserveInfo(id);
+//        return new ResponseEntity<>(list,HttpStatus.OK);
+//    }
+//    // 예매 추가
+//    @PostMapping("/addReserve")
+//    public ResponseEntity<ReserveDto> addReserve(@RequestBody ReserveDto reserveDto) {
+//        ReserveDto addRes = reserveService.addReserve(reserveDto.getUserId(), reserveDto.getPlayId(),reserveDto.getSeeDate(),reserveDto.getSeatPosition());
+//        return ResponseEntity.ok(addRes);
+//    }
+    @GetMapping("/selSeat")
+    public ResponseEntity <List<SeatNumberDto>> getSeatInfo (String id){
+        List<SeatNumberDto> seatNumbers = reserveService.getSeatNumbers(id);
+        return new ResponseEntity<>(seatNumbers,HttpStatus.OK);
     }
-    @PostMapping("/addReserve")
-    public ResponseEntity<ReserveDto> addReserve(@RequestBody ReserveDto reserveDto) {
-        ReserveDto addRes = reserveService.addReserve(reserveDto.getUserId(), reserveDto.getPlayId(),reserveDto.getReserveDate(),reserveDto.getSeeDate(),reserveDto.getSeatPosition());
-        return ResponseEntity.ok(addRes);
-    }
+
 }
