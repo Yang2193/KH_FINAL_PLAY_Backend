@@ -28,11 +28,16 @@ public class Reserve {
     @Column(name = "reserve_date")
     private LocalDateTime reserveDate; // 예매 일시
 
+    @Column(name = "reserve_time")
+    private String time; // 공연 관람일의 시간대(회차)
+
     @Column(name = "see_date")
     private String seeDate; // 공연 관람일
 
-    @ManyToOne
-    @JoinColumn(name = "seatNum_Id")
-    private SeatNumbers seatNumbers; // 좌석 정보
+    @Column(name = "seat_rating")
+    private String seatRating; // 좌석 등급
+
+    @Column(name = "seat_numbers")
+    private String seatNumbers; // 좌석 번호
 
 }

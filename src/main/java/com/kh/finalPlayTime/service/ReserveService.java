@@ -22,60 +22,51 @@ public class ReserveService {
     private final MemberInfoRepository memberInfoRepository;
     private final SeatRepository seatRepository;
     private final SeatNumbersRepository seatNumbersRepository;
-    // 엔티티로 조회
+    // 회원 예매 내역 엔티티로 조회
     public List<Reserve> findReserveList (String userId) {
         return reserveRepository.findByMemberInfoUserId(userId);
     }
-//    // Dto로 조회
-//    public List<ReserveDto> findReserveInfo(String userId) {
-//        List<Reserve> reserveList = reserveRepository.findByMemberInfoUserId(userId);
-//        List<ReserveDto> reserveDtos = new ArrayList<>();
-//
-//        for (Reserve reserve : reserveList) {
-//            ReserveDto reserveDto = new ReserveDto();
-//            reserveDto.setReserveId(reserve.getId());
-//            reserveDto.setReserveDate(reserve.getReserveDate());
-//            reserveDto.setSeatPosition(reserve.getSeatPosition());
-//            reserveDto.setPlayId(reserve.getPlayInfo().getPlayId());
-//            reserveDto.setUserId(reserve.getMemberInfo().getUserId());
-//            reserveDto.setSeeDate(reserve.getSeeDate());
-//            reserveDtos.add(reserveDto);
-//        }
-//        return reserveDtos;
-//    }
-//    // 예매 등록
-//    public ReserveDto addReserve(String userId,String playId,String seeDate,String seatPosition ){
-//        Reserve reserve = new Reserve();
-//        // 회원 정보 설정
-//        Optional<MemberInfo> memberInfoOptional = memberInfoRepository.findByUserId(userId);
-//        if (memberInfoOptional.isEmpty()) {
-//            throw new IllegalArgumentException("Member not found");
-//        }
-//        MemberInfo memberInfo = memberInfoOptional.get();
-//        reserve.setMemberInfo(memberInfo);
-//
-//        // 플레이 정보 설정
-//        Optional<PlayInfo> playInfoOptional = playInfoRepository.findByPlayId(playId);
-//        if (playInfoOptional.isEmpty()) {
-//            throw new IllegalArgumentException("Play not found");
-//        }
-//        PlayInfo playInfo = playInfoOptional.get();
-//        reserve.setPlayInfo(playInfo);
-//        reserve.setReserveDate(LocalDateTime.now());
-//        reserve.setSeeDate(seeDate);
-//        reserve.setSeatPosition(seatPosition);
-//        reserveRepository.save(reserve);
-//
-//        ReserveDto reserveDto =new ReserveDto();
-//        reserveDto.setReserveDate(reserve.getReserveDate());
-//        reserveDto.setReserveId(reserve.getId());
-//        reserveDto.setUserId(reserve.getMemberInfo().getUserId());
-//        reserveDto.setPlayId(reserve.getPlayInfo().getPlayId());
-//        reserveDto.setSeeDate(reserve.getSeeDate());
-//        reserveDto.setSeatPosition(reserve.getSeatPosition());
-//        return reserveDto;
-//    }
-    // 좌석 조회
+    // 예매내역 토대로 좌석 유무 조회
+    public List<Reserve> findSeat (String playId) {
+        return reserveRepository.findByPlayInfoPlayId(playId);
+    }
+    // 예매 등록
+    public ReserveDto addReserve(String userId,String playId,String seeDate,String time,String seatNum,String seatRat ){
+        Reserve reserve = new Reserve();
+        // 회원 정보 설정
+        Optional<MemberInfo> memberInfoOptional = memberInfoRepository.findByUserId(userId);
+        if (memberInfoOptional.isEmpty()) {
+            throw new IllegalArgumentException("Member not found");
+        }
+        MemberInfo memberInfo = memberInfoOptional.get();
+        reserve.setMemberInfo(memberInfo);
+
+        // 플레이 정보 설정
+        Optional<PlayInfo> playInfoOptional = playInfoRepository.findByPlayId(playId);
+        if (playInfoOptional.isEmpty()) {
+            throw new IllegalArgumentException("Play not found");
+        }
+        PlayInfo playInfo = playInfoOptional.get();
+        reserve.setPlayInfo(playInfo);
+        reserve.setReserveDate(LocalDateTime.now());
+        reserve.setSeeDate(seeDate);
+        reserve.setTime(time);
+        reserve.setSeatNumbers(seatNum);
+        reserve.setSeatRating(seatRat);
+        reserveRepository.save(reserve);
+
+        ReserveDto reserveDto =new ReserveDto();
+        reserveDto.setReserveDate(reserve.getReserveDate());
+        reserveDto.setReserveId(reserve.getId());
+        reserveDto.setUserId(reserve.getMemberInfo().getUserId());
+        reserveDto.setPlayId(reserve.getPlayInfo().getPlayId());
+        reserveDto.setSeeDate(reserve.getSeeDate());
+        reserveDto.setSeatNumbers(reserve.getSeatNumbers());
+        reserveDto.setReserveTime(reserve.getTime());
+        reserveDto.setSeatRating(reserve.getSeatRating());
+        return reserveDto;
+    }
+    // 공연장 좌석정보 불러오기
     public List<SeatNumberDto> getSeatNumbers(String theaterId) {
         List<SeatNumbers> seatNumbersList = seatNumbersRepository.findBySeatTheaterTheaterId(theaterId);
 
@@ -89,5 +80,7 @@ public class ReserveService {
         }
         return seatNumberDtoList;
     }
+
+
 }
 
