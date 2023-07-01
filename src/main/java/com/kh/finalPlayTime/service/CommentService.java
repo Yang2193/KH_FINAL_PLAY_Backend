@@ -25,8 +25,8 @@
     public class CommentService {
 
         private final CommentRepository commentRepository;
-        private final PostRepository postRepository;
-        private final PostService postService;
+//        private final PostRepository postRepository;
+//        private final PostService postService;
 
         //댓글 생성
         public boolean createComment(CommentDto commentDto){
