@@ -8,11 +8,11 @@
     @Getter
     @Setter
     public class ReportDto {
-        private Long reportId;
-        private Long userId;
-        private Long postId;
-        private Long commentId;
-        private String reportContent;
+        private Long reportId; //신고 당한 사람 아이디 댓글 테이블에 userId 있음
+        private Long userId; // 신고 한 사람의 아이디 로컬 스토리지에 있음
+        private Long postId; //  게시글 번호
+        private Long commentId; // 댓글 번호
+        private String reportContent; // 신고 내용
         private LocalDateTime reportDate;
         private ReportStatus reportStatus;
     }

@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ReportController {
     private final ReportService reportService;
+
     @PostMapping("/report")
     public ResponseEntity<?> createReport(@RequestBody ReportDto reportDto) {
-            reportService.createReport(reportDto);
+        reportService.createReport(reportDto);
         return ResponseEntity.ok().build();
     }
-
 }
