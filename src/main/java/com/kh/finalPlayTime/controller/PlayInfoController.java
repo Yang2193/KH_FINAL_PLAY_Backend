@@ -81,18 +81,20 @@ public class PlayInfoController {
         List<Reserve> list = reserveService.findReserveList(id);
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
-//    // 예매 조회 Dto
-//    @GetMapping("/reserveList")
-//    public ResponseEntity <List<ReserveDto>> getReserveDto(String id){
-//        List<ReserveDto> list = reserveService.findReserveInfo(id);
-//        return new ResponseEntity<>(list,HttpStatus.OK);
-//    }
-//    // 예매 추가
-//    @PostMapping("/addReserve")
-//    public ResponseEntity<ReserveDto> addReserve(@RequestBody ReserveDto reserveDto) {
-//        ReserveDto addRes = reserveService.addReserve(reserveDto.getUserId(), reserveDto.getPlayId(),reserveDto.getSeeDate(),reserveDto.getSeatPosition());
-//        return ResponseEntity.ok(addRes);
-//    }
+    // 예매 내역으로 좌석 유무 조회
+    @GetMapping("/reserveSeat")
+    public ResponseEntity <List<Reserve>> findSeat(String id){
+        List<Reserve> list = reserveService.findSeat(id);
+        return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+
+    // 예매 추가
+    @PostMapping("/addReserve")
+    public ResponseEntity<ReserveDto> addReserve(@RequestBody ReserveDto reserveDto) {
+        ReserveDto addRes = reserveService.addReserve(reserveDto.getUserId(), reserveDto.getPlayId(),reserveDto.getSeeDate(),reserveDto.getReserveTime(),reserveDto.getSeatNumbers(),reserveDto.getSeatRating());
+        return ResponseEntity.ok(addRes);
+    }
+    // 공연장 좌석 정보 조회
     @GetMapping("/selSeat")
     public ResponseEntity <List<SeatNumberDto>> getSeatInfo (String id){
         List<SeatNumberDto> seatNumbers = reserveService.getSeatNumbers(id);
