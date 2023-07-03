@@ -19,8 +19,8 @@ public class ReportController {
 
     @PostMapping("/report")
     public ResponseEntity<?> createReport(@RequestBody ReportDto reportDto) {
-        String userId = reportService.findMemberId(reportDto.getNickname());
-        reportDto.setUserId(userId);
+//        String userId = reportService.findMemberId(reportDto.getNickname());
+//        reportDto.setUserId(userId);
         reportService.createReport(reportDto);
         return ResponseEntity.ok().build();
     }

@@ -23,7 +23,7 @@ public class ReportService {
     public void createReport(ReportDto reportDto) {
         Report report = new Report();
         report.setNickname(reportDto.getNickname());
-        report.setUserId(reportDto.getUserId());
+        report.setUserId(reportDto.getReportUserId());
         report.setPostId(reportDto.getPostId());
         report.setCommentId(reportDto.getCommentId());
         report.setReportContent(reportDto.getReportContent());
