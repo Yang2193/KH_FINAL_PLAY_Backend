@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -221,11 +222,14 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
     public List<ReportDto> getReportListAll(){
         List<Report> reportList = reportRepository.findAll();
         List<ReportDto> list = new ArrayList<>();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         for(Report e : reportList){
             ReportDto dto = new ReportDto();
             dto.setReportId(e.getReportId());
             dto.setNickname(e.getNickname());
-            dto.setReportDate(e.getReportDate());
+            String formattedDate = e.getReportDate().format(formatter);
+            dto.setReportDate(formattedDate);
             dto.setReportContent(e.getReportContent());
             dto.setCommentId(e.getCommentId());
             dto.setReportUserId(e.getUserId());
@@ -236,6 +240,16 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
         }
         return list;
 
+    }
+
+    //신고 처리완료
+    public void reportProcessComplete(Long reportId){
+        Optional<Report> reportOptional = reportRepository.findByReportId(reportId);
+        if(reportOptional.isPresent()){
+            Report report = reportOptional.get();
+            report.setReportStatus(ReportStatus.COMPLETE);
+            reportRepository.save(report);
+        }
     }
 
 
