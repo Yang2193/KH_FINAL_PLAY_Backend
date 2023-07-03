@@ -48,6 +48,10 @@
     <div>
         <span th:text="${dto.message}"></span>
     </div>
+    <form th:action="@{/admin/blockMember}" method="get">
+        <input type="hidden" name="userId" th:value="${dto.userId}" />
+        <button type="submit" th:text="${dto.message != 'BLOCK' ? '차단' : '차단/탈퇴 해제'}"></button>
+    </form>
 </div>
 </body>
 </html>

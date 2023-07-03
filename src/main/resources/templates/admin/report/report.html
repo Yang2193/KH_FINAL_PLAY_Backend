@@ -46,7 +46,10 @@
         <!-- 링크를 걸어주는 부분은 <a> 태그로 감싸주면 됩니다 -->
       </a>
     </td>
-    <td th:text="${report.postId}"></td>
+    <td>
+      <a th:href="@{/admin/postDetail(postId=${report.postId})}" th:text="${report.postId}">
+      </a>
+    </td>
     <td th:text="${report.commentId}"></td>
     <td th:text="${report.reportContent}"></td>
     <td th:text="${report.reportDate}"></td>

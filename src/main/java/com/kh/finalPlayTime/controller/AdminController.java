@@ -57,6 +57,14 @@ public class AdminController {
         model.addAttribute("dto", dto);
         return "admin/member/memberDetail";
     }
+    //멤버 차단
+    @GetMapping("/blockMember")
+    public String adminBlockMember(@RequestParam String userId, Model model){
+        adminService.blockMember(userId);
+        MemberDto dto = adminService.getMember(userId);
+        model.addAttribute("dto", dto);
+        return "admin/member/memberDetail";
+    }
 
     // 게시판 관리 컨트롤러 시작
 
@@ -67,11 +75,20 @@ public class AdminController {
         return "admin/post/post";
     }
 
+    //게시판 상세 정보
     @GetMapping("/postDetail")
     public String adminPostDetail(@RequestParam Long postId, Model model){
         PostDto postDto = postService.getPostById(postId);
         model.addAttribute("dto", postDto);
         return "admin/post/postDetail";
+    }
+    //게시글 삭제 컨트롤러
+    @GetMapping("/deletePost")
+    public String deletePost(@RequestParam Long postId, Model model){
+        postService.deletePostById(postId);
+        List<PostDto> postList = postService.getAllPosts();
+        model.addAttribute("list", postList);
+        return "admin/post/post";
     }
 
     // 공연 관리 컨트롤러 부분

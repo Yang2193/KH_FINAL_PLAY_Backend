@@ -2,6 +2,7 @@ package com.kh.finalPlayTime.service;
 
 import com.kh.finalPlayTime.constant.Authority;
 import com.kh.finalPlayTime.constant.ReportStatus;
+import com.kh.finalPlayTime.constant.Withdraw;
 import com.kh.finalPlayTime.dto.*;
 import com.kh.finalPlayTime.entity.*;
 import com.kh.finalPlayTime.jwt.TokenProvider;
@@ -62,11 +63,23 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
             memberDto.setUserName(memberInfo.getUserName());
             memberDto.setUserPhone(memberInfo.getUserPhone());
             memberDto.setUserEmail(memberInfo.getUserEmail());
-            memberDto.setMessage("조회 성공");
+            if(memberInfo.getWithdraw() == Withdraw.N) memberDto.setMessage("BLOCK");
+            else memberDto.setMessage("NOT BLOCK");
+
         } else{
-            memberDto.setMessage("아이디가 존재하지 않습니다.");
+            memberDto.setMessage("멤버가 없습니다.");
         }
         return memberDto;
+    }
+    //특정 멤버 차단 / 차단해제
+    public void blockMember(String userId){
+        Optional<MemberInfo> optionalMemberInfo = memberInfoRepository.findByUserId(userId);
+        if(optionalMemberInfo.isPresent()){
+            MemberInfo memberInfo = optionalMemberInfo.get();
+            if(memberInfo.getWithdraw() == Withdraw.Y) memberInfo.setWithdraw(Withdraw.N);
+            else memberInfo.setWithdraw(Withdraw.Y);
+            memberInfoRepository.save(memberInfo);
+        }
     }
 
     //공연 관련
@@ -250,6 +263,20 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
             report.setReportStatus(ReportStatus.COMPLETE);
             reportRepository.save(report);
         }
+    }
+    //신고받은 댓글 확인
+    public CommentDto getComment(Long commentId){
+        Optional<Comment> commentOptional = commentRepository.findByCommentId(commentId);
+        CommentDto commentDto = new CommentDto();
+        if(commentOptional.isPresent()){
+            Comment comment = commentOptional.get();
+            commentDto.setId(comment.getId());
+            commentDto.setCommentContent(comment.getCommentContent());
+            commentDto.setUserId(comment.getMemberInfo().getUserId());
+            commentDto.setCommentDate(comment.getCommentDate());
+            commentDto.setNickname(comment.getMemberInfo().getUserNickname());
+        }
+        return commentDto;
     }
 
 
