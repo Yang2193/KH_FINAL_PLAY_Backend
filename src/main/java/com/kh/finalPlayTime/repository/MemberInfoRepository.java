@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface MemberInfoRepository extends JpaRepository<MemberInfo, String> {
     Optional<MemberInfo> findByUserId(String userId);
     Optional<MemberInfo> findByUserEmail(String userEmail);
+    Optional<MemberInfo> findByUserNickname(String userNickname);
     List<MemberInfo> findAll();
     List<MemberInfo> findByUserIdAndUserPw(String userId, String userPw);
     MemberInfo findByUserNameAndUserEmail(String userName, String userEmail);
