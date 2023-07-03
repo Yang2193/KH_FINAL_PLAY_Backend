@@ -168,6 +168,14 @@ public class AdminController {
         return "admin/theater/theaterSeat";
     }
 
+    //신고 관련 컨트롤러
+    @GetMapping("/report")
+    public String getReportListAll(Model model){
+        List<ReportDto> list = adminService.getReportListAll();
+        model.addAttribute("list", list);
+        return "admin/report/report";
+    }
+
 
 
 

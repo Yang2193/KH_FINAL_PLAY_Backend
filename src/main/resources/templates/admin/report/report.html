@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Report List</title>
+  <style>
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>Report List</h1>
+<table>
+  <tr>
+    <th>Report ID</th>
+    <th>Nickname</th>
+    <th>Report User ID</th>
+    <th>Post ID</th>
+    <th>Comment ID</th>
+    <th>Report Content</th>
+    <th>Report Date</th>
+    <th>Report Status</th>
+  </tr>
+  <tr th:each="report : ${list}">
+    <td th:text="${report.reportId}"></td>
+    <td th:text="${report.nickname}"></td>
+    <td th:text="${report.reportUserId}"></td>
+    <td th:text="${report.postId}"></td>
+    <td th:text="${report.commentId}"></td>
+    <td th:text="${report.reportContent}"></td>
+    <td th:text="${report.reportDate}"></td>
+    <td th:text="${report.reportStatus}"></td>
+  </tr>
+</table>
+</body>
+</html>
