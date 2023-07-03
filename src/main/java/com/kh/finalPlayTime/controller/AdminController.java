@@ -79,8 +79,14 @@ public class AdminController {
     @GetMapping("/postDetail")
     public String adminPostDetail(@RequestParam Long postId, Model model){
         PostDto postDto = postService.getPostById(postId);
-        model.addAttribute("dto", postDto);
-        return "admin/post/postDetail";
+        if(postDto != null){
+            model.addAttribute("dto", postDto);
+            return "admin/post/postDetail";
+        } else{
+            List<PostDto> postList = postService.getAllPosts();
+            model.addAttribute("list", postList);
+            return "admin/post/post";
+        }
     }
     //게시글 삭제 컨트롤러
     @GetMapping("/deletePost")
