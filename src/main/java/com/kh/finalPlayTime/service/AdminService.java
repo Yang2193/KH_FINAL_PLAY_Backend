@@ -266,7 +266,7 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
     }
     //신고받은 댓글 확인
     public CommentDto getComment(Long commentId){
-        Optional<Comment> commentOptional = commentRepository.findByCommentId(commentId);
+        Optional<Comment> commentOptional = commentRepository.findById(commentId);
         CommentDto commentDto = new CommentDto();
         if(commentOptional.isPresent()){
             Comment comment = commentOptional.get();
