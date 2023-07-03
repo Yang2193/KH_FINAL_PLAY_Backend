@@ -2,6 +2,7 @@ package com.kh.finalPlayTime.controller;
 
 import com.kh.finalPlayTime.dto.CommentDto;
 import com.kh.finalPlayTime.dto.PostDto;
+import com.kh.finalPlayTime.service.AuthService;
 import com.kh.finalPlayTime.service.CommentService;
 import com.kh.finalPlayTime.service.MemberService;
 import com.kh.finalPlayTime.service.PostService;
@@ -27,6 +28,9 @@ public class MyPageController {
     private MemberService memberService;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private AuthService authService;
+
 
     public MyPageController(MemberService memberService) {
         this.memberService = memberService;
@@ -67,5 +71,13 @@ public class MyPageController {
         String userEmail = updateData.get("userEmail");
         System.out.println("컨트롤러: " + userId + userPw + userNickname + userName + userPhone + userEmail);
         return ResponseEntity.ok(memberService.updateMemberInfo(userId,userPw,userNickname,userName,userPhone,userEmail));
+    }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<Boolean> withDrawalUser(@RequestBody Map<String, String> deleteData) {
+        String userId = deleteData.get("userId");
+        String userPw = deleteData.get("userPw");
+        System.out.println(userId + " " + userPw);
+        return ResponseEntity.ok(authService.withdrawal(userId));
     }
 }

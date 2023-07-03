@@ -18,7 +18,7 @@ public class PlayInfo {
 //    private Long id;
 //    @Column(name = "play_id", length = 10, nullable = false, unique = true)
     private String playId;
-    @Column(length = 50)
+    @Column(length = 100)
     private String title;
     @Column(length = 30)
     private String periodStart;
