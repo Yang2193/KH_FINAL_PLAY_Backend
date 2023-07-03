@@ -1,6 +1,7 @@
 package com.kh.finalPlayTime.controller;
 
 import com.kh.finalPlayTime.dto.ReportDto;
+import com.kh.finalPlayTime.entity.MemberInfo;
 import com.kh.finalPlayTime.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,8 @@ public class ReportController {
 
     @PostMapping("/report")
     public ResponseEntity<?> createReport(@RequestBody ReportDto reportDto) {
+        String userId = reportService.findMemberId(reportDto.getNickname());
+        reportDto.setUserId(userId);
         reportService.createReport(reportDto);
         return ResponseEntity.ok().build();
     }

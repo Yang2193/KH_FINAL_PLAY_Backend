@@ -21,6 +21,7 @@ public class Report {
     private String nickname; // 신고 당한 사람
     private Long postId; // 어떤 게시글 번호인지
     private Long commentId; // 어떤 댓글의 번호 인지
+    private String userId;
     @Column(length = 300)
     private String reportContent; //신고 내용
     private LocalDateTime reportDate; // 신고 날짜
