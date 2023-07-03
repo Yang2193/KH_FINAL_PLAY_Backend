@@ -175,6 +175,16 @@ public class AdminController {
         model.addAttribute("list", list);
         return "admin/report/report";
     }
+    //신고 처리 컨트롤러
+    @PostMapping("/completeReport")
+    public String completeReport(@RequestParam("reportId") String reportId, Model model){
+        Long id = Long.parseLong(reportId);
+        adminService.reportProcessComplete(id);
+
+        List<ReportDto> list = adminService.getReportListAll();
+        model.addAttribute("list", list);
+        return "admin/report/report";
+    }
 
 
 
