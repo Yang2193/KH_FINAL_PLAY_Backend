@@ -13,6 +13,5 @@ public class ReserveDto {
     private LocalDateTime reserveDate; // 예매 일시
     private String reserveTime;// 공연 관람 시간
     private String seeDate; // 공연 관람일
-    private String seatRating; // 좌석 등급
-    private String seatNumbers; // 좌석 번호
+    private String seatInfo; // 좌석 정보
 }

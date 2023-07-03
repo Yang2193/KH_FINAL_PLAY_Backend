@@ -34,10 +34,7 @@ public class Reserve {
     @Column(name = "see_date")
     private String seeDate; // 공연 관람일
 
-    @Column(name = "seat_rating")
-    private String seatRating; // 좌석 등급
-
-    @Column(name = "seat_numbers")
-    private String seatNumbers; // 좌석 번호
+    @Column(name = "seat_info")
+    private String seatInfo; // 좌석 정보
 
 }

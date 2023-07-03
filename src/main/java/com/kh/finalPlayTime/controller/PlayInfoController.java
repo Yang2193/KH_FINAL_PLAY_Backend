@@ -91,7 +91,7 @@ public class PlayInfoController {
     // 예매 추가
     @PostMapping("/addReserve")
     public ResponseEntity<ReserveDto> addReserve(@RequestBody ReserveDto reserveDto) {
-        ReserveDto addRes = reserveService.addReserve(reserveDto.getUserId(), reserveDto.getPlayId(),reserveDto.getSeeDate(),reserveDto.getReserveTime(),reserveDto.getSeatNumbers(),reserveDto.getSeatRating());
+        ReserveDto addRes = reserveService.addReserve(reserveDto.getUserId(), reserveDto.getPlayId(),reserveDto.getSeeDate(),reserveDto.getReserveTime(),reserveDto.getSeatInfo());
         return ResponseEntity.ok(addRes);
     }
     // 공연장 좌석 정보 조회
