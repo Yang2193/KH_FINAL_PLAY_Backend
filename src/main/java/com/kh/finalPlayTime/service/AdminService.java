@@ -1,6 +1,7 @@
 package com.kh.finalPlayTime.service;
 
 import com.kh.finalPlayTime.constant.Authority;
+import com.kh.finalPlayTime.constant.ReportStatus;
 import com.kh.finalPlayTime.dto.*;
 import com.kh.finalPlayTime.entity.*;
 import com.kh.finalPlayTime.jwt.TokenProvider;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -32,6 +34,8 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
     private final SeatRepository seatRepository;
     private final SeatNumbersRepository seatNumbersRepository;
     private final EntityManager entityManager;
+    private final ReportRepository reportRepository;
+
     // 전체 회원 조회
     public List<MemberDto> getMemberList() {
         List<MemberDto> memberDtoList = new ArrayList<>();
@@ -214,7 +218,39 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
         Long seatId = Long.valueOf(id);
         seatNumbersRepository.deleteBySeatSeatId(seatId);
     }
+    //신고 관련 메소드는 이 아래로
+    public List<ReportDto> getReportListAll(){
+        List<Report> reportList = reportRepository.findAll();
+        List<ReportDto> list = new ArrayList<>();
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        for(Report e : reportList){
+            ReportDto dto = new ReportDto();
+            dto.setReportId(e.getReportId());
+            dto.setNickname(e.getNickname());
+            String formattedDate = e.getReportDate().format(formatter);
+            dto.setReportDate(formattedDate);
+            dto.setReportContent(e.getReportContent());
+            dto.setCommentId(e.getCommentId());
+            dto.setReportUserId(e.getUserId());
+            if(e.getPostId() != null) dto.setPostId(e.getPostId());
+            if(e.getCommentId() != null) dto.setCommentId(e.getCommentId());
+            if(e.getReportStatus() == ReportStatus.PROCESS) {dto.setReportStatus("진행 중");} else {dto.setReportStatus("처리 완료");}
+            list.add(dto);
+        }
+        return list;
+
+    }
+
+    //신고 처리완료
+    public void reportProcessComplete(Long reportId){
+        Optional<Report> reportOptional = reportRepository.findByReportId(reportId);
+        if(reportOptional.isPresent()){
+            Report report = reportOptional.get();
+            report.setReportStatus(ReportStatus.COMPLETE);
+            reportRepository.save(report);
+        }
+    }
 
 
 

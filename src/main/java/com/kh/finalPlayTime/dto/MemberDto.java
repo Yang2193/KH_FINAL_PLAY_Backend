@@ -1,6 +1,7 @@
 package com.kh.finalPlayTime.dto;
 
 import com.kh.finalPlayTime.constant.Authority;
+import com.kh.finalPlayTime.constant.Withdraw;
 import com.kh.finalPlayTime.entity.MemberInfo;
 import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +34,7 @@ public class MemberDto {
                 .userPhone(userPhone)
                 .authority(Authority.ROLE_USER)
                 .joinDate(LocalDateTime.now())
+                .withdraw(Withdraw.Y)
                 .build();
     }
 

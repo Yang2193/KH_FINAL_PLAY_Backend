@@ -16,6 +16,6 @@ public class ReportDto {
     private Long postId; // 게시글 번호
     private Long commentId; // 댓글 번호
     private String reportContent; // 신고 내용
-    private LocalDateTime reportDate;
-    private ReportStatus reportStatus;
+    private String reportDate;
+    private String reportStatus;
 }

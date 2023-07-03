@@ -2,6 +2,7 @@ package com.kh.finalPlayTime.service;
 
 import antlr.Token;
 import com.kh.finalPlayTime.constant.Authority;
+import com.kh.finalPlayTime.constant.Withdraw;
 import com.kh.finalPlayTime.controller.JwtController;
 import com.kh.finalPlayTime.dto.MemberDto;
 import com.kh.finalPlayTime.dto.TokenDto;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -54,6 +56,10 @@ public class AuthService {
         // 비밀번호 맞는지 확인
         if (!passwordEncoder.matches(memberDto.getUserPw(), loginMember.getUserPw())) {
             throw new IllegalArgumentException("비밀번호가 맞지 않습니다.");
+        }
+
+        if (loginMember.getWithdraw().equals(Withdraw.N)) {
+            throw new IllegalArgumentException("해당 사용자는 탈퇴한 상태입니다.");
         }
 
         // 권한 확인
@@ -125,6 +131,7 @@ public class AuthService {
         return false;
     }
 
+    // 패스워드 찾기 시 회원 이메일로 임시 패스워드 발송 및 db에 임시 패스워드 저장
     public void updatePasswordWithAuthKey(String userId, String userEmail) throws Exception {
         String ePw = emailService.sendPasswordAuthKey(userEmail);
         MemberInfo memberInfo = memberInfoRepository.findByUserId(userId)
@@ -132,5 +139,18 @@ public class AuthService {
         String encodePassword = passwordEncoder.encode(ePw);
         memberInfo.setUserPw(encodePassword);
         memberInfoRepository.save(memberInfo);
+    }
+
+    // 회원탈퇴
+
+    public boolean withdrawal(String userId) {
+        Optional<MemberInfo> memberInfoOptional = memberInfoRepository.findByUserId(userId);
+        if (memberInfoOptional.isPresent()) {
+            MemberInfo memberInfo = memberInfoOptional.get();
+            memberInfo.setWithdraw(Withdraw.N);
+            memberInfoRepository.save(memberInfo);
+            return true;
+        }
+        return false;
     }
 }

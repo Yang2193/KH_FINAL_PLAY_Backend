@@ -168,6 +168,24 @@ public class AdminController {
         return "admin/theater/theaterSeat";
     }
 
+    //신고 관련 컨트롤러
+    @GetMapping("/report")
+    public String getReportListAll(Model model){
+        List<ReportDto> list = adminService.getReportListAll();
+        model.addAttribute("list", list);
+        return "admin/report/report";
+    }
+    //신고 처리 컨트롤러
+    @PostMapping("/completeReport")
+    public String completeReport(@RequestParam("reportId") String reportId, Model model){
+        Long id = Long.parseLong(reportId);
+        adminService.reportProcessComplete(id);
+
+        List<ReportDto> list = adminService.getReportListAll();
+        model.addAttribute("list", list);
+        return "admin/report/report";
+    }
+
 
 
 
