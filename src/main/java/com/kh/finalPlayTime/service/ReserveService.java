@@ -31,7 +31,7 @@ public class ReserveService {
         return reserveRepository.findByPlayInfoPlayId(playId);
     }
     // 예매 등록
-    public ReserveDto addReserve(String userId,String playId,String seeDate,String time,String seatNum,String seatRat ){
+    public ReserveDto addReserve(String userId,String playId,String seeDate,String time,String seatInfo){
         Reserve reserve = new Reserve();
         // 회원 정보 설정
         Optional<MemberInfo> memberInfoOptional = memberInfoRepository.findByUserId(userId);
@@ -51,8 +51,7 @@ public class ReserveService {
         reserve.setReserveDate(LocalDateTime.now());
         reserve.setSeeDate(seeDate);
         reserve.setTime(time);
-        reserve.setSeatNumbers(seatNum);
-        reserve.setSeatRating(seatRat);
+        reserve.setSeatInfo(seatInfo);
         reserveRepository.save(reserve);
 
         ReserveDto reserveDto =new ReserveDto();
@@ -61,9 +60,8 @@ public class ReserveService {
         reserveDto.setUserId(reserve.getMemberInfo().getUserId());
         reserveDto.setPlayId(reserve.getPlayInfo().getPlayId());
         reserveDto.setSeeDate(reserve.getSeeDate());
-        reserveDto.setSeatNumbers(reserve.getSeatNumbers());
+        reserveDto.setSeatInfo(reserve.getSeatInfo());
         reserveDto.setReserveTime(reserve.getTime());
-        reserveDto.setSeatRating(reserve.getSeatRating());
         return reserveDto;
     }
     // 공연장 좌석정보 불러오기
