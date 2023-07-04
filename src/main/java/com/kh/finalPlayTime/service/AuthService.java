@@ -1,9 +1,7 @@
 package com.kh.finalPlayTime.service;
 
-import antlr.Token;
 import com.kh.finalPlayTime.constant.Authority;
 import com.kh.finalPlayTime.constant.Withdraw;
-import com.kh.finalPlayTime.controller.JwtController;
 import com.kh.finalPlayTime.dto.MemberDto;
 import com.kh.finalPlayTime.dto.TokenDto;
 import com.kh.finalPlayTime.entity.MemberInfo;
@@ -22,9 +20,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service

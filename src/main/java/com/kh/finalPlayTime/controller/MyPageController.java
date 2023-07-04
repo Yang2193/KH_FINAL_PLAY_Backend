@@ -2,10 +2,10 @@ package com.kh.finalPlayTime.controller;
 
 import com.kh.finalPlayTime.dto.CommentDto;
 import com.kh.finalPlayTime.dto.PostDto;
-import com.kh.finalPlayTime.service.AuthService;
-import com.kh.finalPlayTime.service.CommentService;
-import com.kh.finalPlayTime.service.MemberService;
-import com.kh.finalPlayTime.service.PostService;
+import com.kh.finalPlayTime.dto.ReserveDto;
+import com.kh.finalPlayTime.entity.Reserve;
+import com.kh.finalPlayTime.repository.ReserveRepository;
+import com.kh.finalPlayTime.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,8 @@ public class MyPageController {
     private CommentService commentService;
     @Autowired
     private AuthService authService;
-
+    @Autowired
+    private ReserveService reserveService;
 
     public MyPageController(MemberService memberService) {
         this.memberService = memberService;
@@ -39,6 +41,8 @@ public class MyPageController {
         this.postService = postService;
     }
     public MyPageController(CommentService commentService) { this.commentService = commentService; }
+    public MyPageController(AuthService authService) { this.authService = authService; }
+    public MyPageController(ReserveService reserveService) { this.reserveService = reserveService; }
 
     @PostMapping("/post")
     public ResponseEntity<List<PostDto>> getMemberPost(@RequestBody Map<String, String> getMemberPostData) {
@@ -71,6 +75,13 @@ public class MyPageController {
         String userEmail = updateData.get("userEmail");
         System.out.println("컨트롤러: " + userId + userPw + userNickname + userName + userPhone + userEmail);
         return ResponseEntity.ok(memberService.updateMemberInfo(userId,userPw,userNickname,userName,userPhone,userEmail));
+    }
+
+    @PostMapping("/buylist")
+    public ResponseEntity<List<Reserve>> getBuyList(@RequestBody Map<String, String> requestMap) {
+        String userId = requestMap.get("userId");
+        List<Reserve> list = reserveService.findReserveList(userId);
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping("/withdraw")
