@@ -75,6 +75,23 @@ public class AdminController {
         return "admin/post/post";
     }
 
+    //게시판에 공지글 작성하기
+    @GetMapping("/writePost")
+    public String adminWritePost(){
+        return "admin/post/write";
+    }
+
+    @PostMapping("/writePost2")
+    public String adminWritePost2(@RequestParam String title,
+                                  @RequestParam String content,
+                                  Model model){
+        adminService.writePost(title, content);
+        List<PostDto> postList = postService.getAllPosts();
+        model.addAttribute("list", postList);
+        return "admin/post/post";
+    }
+
+
     //게시판 상세 정보
     @GetMapping("/postDetail")
     public String adminPostDetail(@RequestParam Long postId, Model model){

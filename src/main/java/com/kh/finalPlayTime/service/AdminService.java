@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -300,6 +301,19 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
             postDto.setPostDate(post.getPostDate());
         }
         return postDto;
+    }
+
+    //공지 등록
+    public void writePost(String title, String content){
+        Post post = new Post();
+        Optional<MemberInfo> memberInfoOptional = memberInfoRepository.findByAuthority(Authority.ROLE_ADMIN);
+        MemberInfo memberInfo = memberInfoOptional.get();
+        post.setPostTitle(title);
+        post.setPostContent(content);
+        post.setPostCategory("2");
+        post.setMemberInfo(memberInfo);
+        post.setPostDate(LocalDateTime.now());
+        postRepository.save(post);
     }
 
 
