@@ -78,15 +78,10 @@ public class AdminController {
     //게시판 상세 정보
     @GetMapping("/postDetail")
     public String adminPostDetail(@RequestParam Long postId, Model model){
-        PostDto postDto = postService.getPostById(postId);
-        if(postDto != null){
-            model.addAttribute("dto", postDto);
-            return "admin/post/postDetail";
-        } else{
-            List<PostDto> postList = postService.getAllPosts();
-            model.addAttribute("list", postList);
-            return "admin/post/post";
-        }
+        PostDto postDto = adminService.getPost(postId);
+
+        model.addAttribute("dto", postDto);
+        return "admin/post/postDetail";
     }
     //게시글 삭제 컨트롤러
     @GetMapping("/deletePost")
@@ -95,6 +90,21 @@ public class AdminController {
         List<PostDto> postList = postService.getAllPosts();
         model.addAttribute("list", postList);
         return "admin/post/post";
+    }
+    //댓글 보기
+    @GetMapping("/commentDetail")
+    public String adminComment(@RequestParam Long commentId, Model model){
+        CommentDto commentDto = adminService.getComment(commentId);
+        if(commentDto != null) {
+            model.addAttribute("dto", commentDto);
+            return "admin/post/comment";
+        } else return "redirect:/admin/report";
+    }
+    //댓글 삭제
+    @GetMapping("/deleteComment")
+    public String deleteComment(@RequestParam Long commentId){
+        adminService.deleteComment(commentId);
+        return "redirect:/admin/report";
     }
 
     // 공연 관리 컨트롤러 부분
@@ -204,14 +214,7 @@ public class AdminController {
         Long id = Long.parseLong(reportId);
         adminService.reportProcessComplete(id);
 
-        List<ReportDto> list = adminService.getReportListAll();
-        model.addAttribute("list", list);
-        return "admin/report/report";
+        return "redirect:/admin/report/";
     }
-
-
-
-
-
 
 }

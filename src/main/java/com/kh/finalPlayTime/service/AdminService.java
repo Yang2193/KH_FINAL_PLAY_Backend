@@ -279,6 +279,29 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
         return commentDto;
     }
 
+    //댓글 삭제
+    public void deleteComment(Long commentId){
+        commentRepository.deleteById(commentId);
+    }
+
+    //신고된 게시글 확인
+    public PostDto getPost(Long postId){
+        Optional<Post> postOptional = postRepository.findById(postId);
+        PostDto postDto = new PostDto();
+        if(postOptional.isPresent()){
+            Post post = postOptional.get();
+            postDto.setId(post.getId());
+            postDto.setMemberInfo(post.getMemberInfo());
+            postDto.setPostTitle(post.getPostTitle());
+            postDto.setPostContent(post.getPostContent());
+            postDto.setPostImageUrl(post.getPostImageUrl());
+            postDto.setPostCategory(post.getPostCategory());
+            postDto.setPostViews(post.getPostViews());
+            postDto.setPostDate(post.getPostDate());
+        }
+        return postDto;
+    }
+
 
 
 
