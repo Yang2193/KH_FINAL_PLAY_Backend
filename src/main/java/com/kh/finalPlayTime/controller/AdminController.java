@@ -2,6 +2,7 @@ package com.kh.finalPlayTime.controller;
 
 import com.kh.finalPlayTime.dto.*;
 import com.kh.finalPlayTime.service.AdminService;
+import com.kh.finalPlayTime.service.PlayInfoApiService;
 import com.kh.finalPlayTime.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class AdminController {
     private final AdminService adminService;
     private final PostService postService;
+    private final PlayInfoApiService apiService;
     @GetMapping("")
     public String adminMainPage(){
         return "admin/main";
@@ -33,6 +35,13 @@ public class AdminController {
         return "admin/member";
     }
 
+    @GetMapping("/savePlay")
+    public String savePlay(){
+        boolean isSuccess = false;
+        String result = apiService.playListApi();
+        isSuccess = apiService.listFromJsonObj(result);
+        return "redirect:/admin/playlist";
+    }
     @GetMapping("/getAllMember")
     public String adminGetAllMember(@RequestParam(required = false) String userId, Model model){
         List<MemberDto> list;
