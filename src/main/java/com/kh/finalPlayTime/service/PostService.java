@@ -155,18 +155,24 @@ public class PostService {
         OneLineReview oneLineReview = new OneLineReview();
         // 회원 정보 설정
         Optional<MemberInfo> memberInfoOptional = memberInfoRepository.findByUserId(userId);
-        if (memberInfoOptional.isEmpty()) {
-            throw new IllegalArgumentException("Member not found");
-        }
-        MemberInfo memberInfo = memberInfoOptional.get();
+        MemberInfo memberInfo = memberInfoOptional.orElseThrow(() -> new IllegalArgumentException("Member not found"));
+
+        Optional<PlayInfo> playInfoOptional = playInfoRepository.findByPlayId(playId);
+        PlayInfo playInfo = playInfoOptional.orElseThrow(() -> new IllegalArgumentException("Play not found"));
+
+//        Optional<MemberInfo> memberInfoOptional = memberInfoRepository.findByUserId(userId);
+//        if (memberInfoOptional.isEmpty()) {
+//            throw new IllegalArgumentException("Member not found");
+//        }
+//        MemberInfo memberInfo = memberInfoOptional.get();
         oneLineReview.setMemberInfo(memberInfo);
 
         // 플레이 정보 설정
-        Optional<PlayInfo> playInfoOptional = playInfoRepository.findByPlayId(playId);
-        if (playInfoOptional.isEmpty()) {
-            throw new IllegalArgumentException("Play not found");
-        }
-        PlayInfo playInfo = playInfoOptional.get();
+//        Optional<PlayInfo> playInfoOptional = playInfoRepository.findByPlayId(playId);
+//        if (playInfoOptional.isEmpty()) {
+//            throw new IllegalArgumentException("Play not found");
+//        }
+//        PlayInfo playInfo = playInfoOptional.get();
         oneLineReview.setPlayInfo(playInfo);
         oneLineReview.setOlrDate(LocalDateTime.now());
         oneLineReview.setOlrRating(olrRating);
@@ -188,5 +194,15 @@ public class PostService {
         oneLineReviewRepository.deleteById(id);
     }
     // 한줄평 수정
+    public OneLineReview updateOneLineReview(Long id, String olrContent, double olrRating) {
+        Optional<OneLineReview> oneLineReviewOptional = oneLineReviewRepository.findById(id);
+        if (oneLineReviewOptional.isEmpty()) {
+            throw new IllegalArgumentException("OneLineReview not found");
+        }
+        OneLineReview oneLineReview = oneLineReviewOptional.get();
+        oneLineReview.setOlrContent(olrContent);
+        oneLineReview.setOlrRating(olrRating);
+        return oneLineReviewRepository.save(oneLineReview);
+    }
 
 }

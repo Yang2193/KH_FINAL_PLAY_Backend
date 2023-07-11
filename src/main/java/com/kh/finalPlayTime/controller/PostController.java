@@ -80,9 +80,19 @@ public class PostController {
         OneLineReviewDto addOLR = postService.addOneLineReview(oneLineReview.getOlrContent(),oneLineReview.getOlrRating(),oneLineReview.getUserId(), oneLineReview.getPlayId());
         return ResponseEntity.ok(addOLR);
     }
+    // 한줄평 삭제
     @PostMapping("/delete/oneLineReview")
     public ResponseEntity<String> deleteOLR(@RequestParam Long olrId) {
         postService.deleteOLR(olrId);
         return ResponseEntity.ok("한줄평 삭제 완료");
+    }
+    // 한줄평 수정
+    @PostMapping("/update/oneLineReview")
+    public ResponseEntity<String> updateOLR(@RequestBody OneLineReviewDto oneLineReviewDto) {
+        Long olrId = oneLineReviewDto.getOlrId();
+        String olrContent = oneLineReviewDto.getOlrContent();
+        double olrRating = oneLineReviewDto.getOlrRating();
+        postService.updateOneLineReview(olrId,olrContent,olrRating);
+        return ResponseEntity.ok("한줄평 수정 완료");
     }
 }
