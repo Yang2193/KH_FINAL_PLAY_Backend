@@ -37,6 +37,9 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
     private final SeatNumbersRepository seatNumbersRepository;
     private final EntityManager entityManager;
     private final ReportRepository reportRepository;
+    private final ReserveRepository reserveRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final PlayLikeRepository playLikeRepository;
 
     // 전체 회원 조회
     public List<MemberDto> getMemberList() {
@@ -81,6 +84,17 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
             else memberInfo.setWithdraw(Withdraw.Y);
             memberInfoRepository.save(memberInfo);
         }
+    }
+
+    //특정 회원 탈퇴시키기
+    public void deleteMember(String userId){
+        commentRepository.deleteByMemberInfoUserId(userId);
+        postRepository.deleteByMemberInfoUserId(userId);
+        refreshTokenRepository.deleteByUserId(userId);
+        reportRepository.deleteByUserId(userId);
+        reserveRepository.deleteByMemberInfoUserId(userId);
+        playLikeRepository.deleteByMemberInfoUserId(userId);
+        memberInfoRepository.deleteByUserId(userId);
     }
 
     //공연 관련
@@ -314,6 +328,25 @@ public class AdminService { // Admin에서만 필요한 Service는 AdminService�
         post.setMemberInfo(memberInfo);
         post.setPostDate(LocalDateTime.now());
         postRepository.save(post);
+    }
+
+    // 전체 결제내역 확인
+    public List<ReserveDto> getReserveAll(){
+        List<Reserve> reserveList = reserveRepository.findAll();
+        List<ReserveDto> list = new ArrayList<>();
+        for(Reserve e : reserveList){
+            ReserveDto dto = new ReserveDto();
+            dto.setReserveId(e.getId());
+            dto.setSeatInfo(e.getSeatInfo());
+            dto.setReserveTime(e.getTime());
+            dto.setReserveDate(e.getReserveDate());
+            dto.setSeeDate(e.getSeeDate());
+            dto.setPlayId(e.getPlayInfo().getPlayId());
+            dto.setPlayTitle(e.getPlayInfo().getTitle());
+            dto.setUserId(e.getMemberInfo().getUserId());
+            list.add(dto);
+        }
+        return list;
     }
 
 

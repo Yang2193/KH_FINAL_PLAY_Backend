@@ -2,6 +2,7 @@ package com.kh.finalPlayTime.controller;
 
 import com.kh.finalPlayTime.dto.*;
 import com.kh.finalPlayTime.service.AdminService;
+import com.kh.finalPlayTime.service.PlayInfoApiService;
 import com.kh.finalPlayTime.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class AdminController {
     private final AdminService adminService;
     private final PostService postService;
+    private final PlayInfoApiService apiService;
     @GetMapping("")
     public String adminMainPage(){
         return "admin/main";
@@ -33,6 +35,13 @@ public class AdminController {
         return "admin/member";
     }
 
+    @GetMapping("/savePlay")
+    public String savePlay(){
+        boolean isSuccess = false;
+        String result = apiService.playListApi();
+        isSuccess = apiService.listFromJsonObj(result);
+        return "redirect:/admin/playlist";
+    }
     @GetMapping("/getAllMember")
     public String adminGetAllMember(@RequestParam(required = false) String userId, Model model){
         List<MemberDto> list;
@@ -64,6 +73,12 @@ public class AdminController {
         MemberDto dto = adminService.getMember(userId);
         model.addAttribute("dto", dto);
         return "admin/member/memberDetail";
+    }
+
+    @PostMapping("/deleteMember")
+    public String adminDeleteMember(@RequestParam String userId, Model model){
+        adminService.deleteMember(userId);
+        return "redirect:/admin/getAllMember";
     }
 
     // 게시판 관리 컨트롤러 시작
@@ -232,6 +247,34 @@ public class AdminController {
         adminService.reportProcessComplete(id);
 
         return "redirect:/admin/report/";
+    }
+
+    //결제 내역 컨트롤러
+    @GetMapping("/payment")
+    public String paymentList(@RequestParam(required = false) String userId,
+                              @RequestParam(required = false) String playId,
+                              @RequestParam(required = false) String title, Model model){
+        List<ReserveDto> list;
+        if (userId != null) {
+            // User ID가 제공된 경우
+            list = adminService.getReserveAll().stream()
+                    .filter(reserveDto -> reserveDto.getUserId().contains(userId))
+                    .collect(Collectors.toList());
+        } else if (playId != null) {
+            // Play ID가 제공된 경우
+            list = adminService.getReserveAll().stream()
+                    .filter(reserveDto -> reserveDto.getPlayId().contains(playId))
+                    .collect(Collectors.toList());
+        } else if(title != null){
+            list = adminService.getReserveAll().stream()
+                    .filter(reserveDto -> reserveDto.getPlayTitle().contains(title))
+                    .collect(Collectors.toList());
+        }
+        else {
+            list = adminService.getReserveAll();
+        }
+        model.addAttribute("list", list);
+        return "admin/payment/payment";
     }
 
 }

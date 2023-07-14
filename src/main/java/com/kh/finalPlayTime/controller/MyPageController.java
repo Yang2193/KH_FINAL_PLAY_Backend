@@ -91,4 +91,10 @@ public class MyPageController {
         System.out.println(userId + " " + userPw);
         return ResponseEntity.ok(authService.withdrawal(userId));
     }
+
+    @GetMapping("/ticket/{reserveId}")
+    public ResponseEntity<ReserveDto> getReserveDetail(@PathVariable Long reserveId){
+        ReserveDto reserveDto = reserveService.getReserveDetail(reserveId);
+        return new ResponseEntity<>(reserveDto, HttpStatus.OK);
+    }
 }
