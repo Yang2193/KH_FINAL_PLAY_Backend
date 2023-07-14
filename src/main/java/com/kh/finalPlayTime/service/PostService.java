@@ -117,18 +117,27 @@ public class PostService {
         postRepository.deleteById(postId);
     }
 
+
+
     // 게시물 수정 기능
     public PostDto updatePost(Long postId, PostDto postDto) {
         Post existingPost = postRepository.findById(postId).orElse(null);
         if (existingPost != null) {
             existingPost.setPostTitle(postDto.getPostTitle());
             existingPost.setPostContent(postDto.getPostContent());
-            existingPost.setPostImageUrl(postDto.getPostImageUrl());
+
+            // 이미지 URL 업데이트
+            if (postDto.getPostImageUrl() != null) {
+                existingPost.setPostImageUrl(postDto.getPostImageUrl());
+            }
+
+
             Post updatedPost = postRepository.save(existingPost);
             return convertToDto(updatedPost);
         }
         return null;
     }
+
 
     // 특정 키워드를 포함하는 게시물 목록 조회 기능
     public List<PostDto> searchPostsByKeyword(String keyword) {
