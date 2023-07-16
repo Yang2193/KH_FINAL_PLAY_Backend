@@ -1,5 +1,6 @@
 package com.kh.finalPlayTime.dto;
 
+import com.kh.finalPlayTime.kakao.dto.KakaoProfile;
 import lombok.*;
 
 @Getter
@@ -12,10 +13,8 @@ public class TokenDto {
     private String accessToken;
     private String refreshToken;
     private Long tokenExpiresIn;
-    private String authority;
 
     public TokenDto(String renewAccessToken){
         accessToken = renewAccessToken;
     }
-
 }

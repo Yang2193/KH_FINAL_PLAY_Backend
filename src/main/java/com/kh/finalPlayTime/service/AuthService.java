@@ -62,7 +62,7 @@ public class AuthService {
             try {
                 Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
                 TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
-                tokenDto.setAuthority(String.valueOf(Authority.ROLE_ADMIN));
+//                tokenDto.setAuthority(String.valueOf(Authority.ROLE_ADMIN));
                 return tokenDto;
             } catch (AuthenticationException e) {
                 throw e;
@@ -71,7 +71,7 @@ public class AuthService {
             try {
                 Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
                 TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
-                tokenDto.setAuthority(String.valueOf(Authority.ROLE_USER));
+//                tokenDto.setAuthority(String.valueOf(Authority.ROLE_USER));
                 return tokenDto;
             } catch (AuthenticationException e) {
                 throw e;
