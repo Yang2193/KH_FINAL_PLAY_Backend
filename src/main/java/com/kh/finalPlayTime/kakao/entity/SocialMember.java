@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "social_member")
 @Getter
 @Setter
 @ToString

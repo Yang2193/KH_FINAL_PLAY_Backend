@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface SocialMemberRepository extends JpaRepository<SocialMember, Long> {
     Optional<SocialMember> findByEmail(String email);
     Optional<SocialMember> findByNickname(String nickname);
-    Optional<SocialMember> findByIdAndPassword(Long id, String password);
+    Optional<SocialMember> findById(Long id);
     Optional<SocialMember> findByEmailAndSocialOauth(String email, SocialOAuth socialOauth);
 }

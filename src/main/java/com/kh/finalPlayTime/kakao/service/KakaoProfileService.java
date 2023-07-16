@@ -28,8 +28,7 @@ public class KakaoProfileService {
     private final PasswordEncoder passwordEncoder;
     private final SocialMemberRepository socialMemberRepository;
     @Value("${cos.key}")
-    public String cosKey;
-
+    private String cosKey;
     public KakaoProfile getKakaoProfile(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
@@ -41,20 +40,16 @@ public class KakaoProfileService {
                 kakaoProfileRequest,
                 KakaoProfile.class
         );
-//        System.out.println(cosKey);
-//        String encodeCosKey = passwordEncoder.encode(cosKey);
-//        System.out.println(response.getBody().getId());
-//        System.out.println(response.getBody().getKakao_account().getEmail());
-//        System.out.println(response.getBody().getKakao_account().getProfile().getNickname());
-//        SocialMember socialMember = new SocialMember();
-//        socialMember.setId(response.getBody().getId());
-//        socialMember.setPassword(encodeCosKey);
-//        socialMember.setEmail(response.getBody().getKakao_account().getEmail());
-//        socialMember.setNickname(response.getBody().getKakao_account().getProfile().getNickname());
-//        socialMember.setSocialOauth(SocialOAuth.KAKAO);
-//        socialMember.setAuth(Authority.ROLE_USER);
-//        socialMemberRepository.save(socialMember);
-//        System.out.println("저장 완료");
+        SocialMember socialMember = new SocialMember();
+        socialMember.setId(response.getBody().getId());
+        String encodeCosKey = passwordEncoder.encode(cosKey);
+        socialMember.setPassword(encodeCosKey);
+        socialMember.setEmail(response.getBody().getKakao_account().getEmail());
+        socialMember.setNickname(response.getBody().getKakao_account().getProfile().getNickname());
+        socialMember.setSocialOauth(SocialOAuth.KAKAO);
+        socialMember.setAuth(Authority.ROLE_USER);
+        socialMemberRepository.save(socialMember);
+        System.out.println("저장 완료");
         return response.getBody();
     }
 }

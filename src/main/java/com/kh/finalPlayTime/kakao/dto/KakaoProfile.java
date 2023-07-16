@@ -51,6 +51,7 @@ public class KakaoProfile {
         }
     }
     public SocialMember toKakaoProfile(PasswordEncoder passwordEncoder) {
+
         return SocialMember.builder()
                 .id(id)
                 .password(passwordEncoder.encode(password))
