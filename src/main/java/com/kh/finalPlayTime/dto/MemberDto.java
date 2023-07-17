@@ -80,6 +80,7 @@ public class MemberDto {
         @Setter
         public static class Profile {
             private String nickname;
+            private String thumbnail_image_url;
         }
     }
 }
