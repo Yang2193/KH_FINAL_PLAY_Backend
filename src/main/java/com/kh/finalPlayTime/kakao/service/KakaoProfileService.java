@@ -1,11 +1,12 @@
 package com.kh.finalPlayTime.kakao.service;
 
 import com.kh.finalPlayTime.constant.Authority;
+import com.kh.finalPlayTime.constant.Withdraw;
+import com.kh.finalPlayTime.dto.MemberDto;
+import com.kh.finalPlayTime.entity.MemberInfo;
 import com.kh.finalPlayTime.kakao.constant.SocialOAuth;
-import com.kh.finalPlayTime.kakao.dto.KakaoProfile;
 
-import com.kh.finalPlayTime.kakao.entity.SocialMember;
-import com.kh.finalPlayTime.kakao.repository.SocialMemberRepository;
+import com.kh.finalPlayTime.repository.MemberInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -19,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Component
@@ -26,29 +29,32 @@ import org.springframework.web.client.RestTemplate;
 public class KakaoProfileService {
     private final RestTemplate restTemplate;
     private final PasswordEncoder passwordEncoder;
-    private final SocialMemberRepository socialMemberRepository;
+    private final MemberInfoRepository memberInfoRepository;
     @Value("${cos.key}")
     private String cosKey;
-    public KakaoProfile getKakaoProfile(String accessToken) {
+    public MemberDto getKakaoProfile(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
-        ResponseEntity<KakaoProfile> response = restTemplate.exchange(
+        HttpEntity<MultiValueMap<String, String>> memberRequest = new HttpEntity<>(headers);
+        ResponseEntity<MemberDto> response = restTemplate.exchange(
                 "https://kapi.kakao.com/v2/user/me",
                 HttpMethod.GET,
-                kakaoProfileRequest,
-                KakaoProfile.class
+                memberRequest,
+                MemberDto.class
         );
-        SocialMember socialMember = new SocialMember();
-        socialMember.setId(response.getBody().getId());
+        MemberInfo memberInfo = new MemberInfo();
+        memberInfo.setUserId(String.valueOf(response.getBody().getId()));
         String encodeCosKey = passwordEncoder.encode(cosKey);
-        socialMember.setPassword(encodeCosKey);
-        socialMember.setEmail(response.getBody().getKakao_account().getEmail());
-        socialMember.setNickname(response.getBody().getKakao_account().getProfile().getNickname());
-        socialMember.setSocialOauth(SocialOAuth.KAKAO);
-        socialMember.setAuth(Authority.ROLE_USER);
-        socialMemberRepository.save(socialMember);
+        memberInfo.setUserPw(encodeCosKey);
+        memberInfo.setUserName(response.getBody().getKakao_account().getProfile().getNickname());
+        memberInfo.setUserEmail(response.getBody().getKakao_account().getEmail());
+        memberInfo.setUserNickname(response.getBody().getKakao_account().getProfile().getNickname());
+        memberInfo.setSocialOAuth(SocialOAuth.KAKAO);
+        memberInfo.setJoinDate(LocalDateTime.now());
+        memberInfo.setAuthority(Authority.ROLE_USER);
+        memberInfo.setWithdraw(Withdraw.Y);
+        memberInfoRepository.save(memberInfo);
         System.out.println("저장 완료");
         return response.getBody();
     }

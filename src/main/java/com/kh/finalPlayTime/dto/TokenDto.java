@@ -1,6 +1,5 @@
 package com.kh.finalPlayTime.dto;
 
-import com.kh.finalPlayTime.kakao.dto.KakaoProfile;
 import lombok.*;
 
 @Getter

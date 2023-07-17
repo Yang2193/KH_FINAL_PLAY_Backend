@@ -1,7 +1,7 @@
 package com.kh.finalPlayTime.kakao.controller;
 
+import com.kh.finalPlayTime.dto.MemberDto;
 import com.kh.finalPlayTime.dto.TokenDto;
-import com.kh.finalPlayTime.kakao.dto.KakaoProfile;
 import com.kh.finalPlayTime.kakao.dto.KakaoTokens;
 import com.kh.finalPlayTime.kakao.dto.TotalDto;
 import com.kh.finalPlayTime.kakao.service.KAuthService;
@@ -26,13 +26,12 @@ public class KakaoController {
     private final KAuthService kAuthService;
 
     @PostMapping(value = "/kakao/callback")
-    public KakaoProfile kakaoCallback(@RequestBody Map<String, String> tokenData) {
+    public TotalDto kakaoCallback(@RequestBody Map<String, String> tokenData) {
         String code = tokenData.get("code");
         KakaoTokens kakaoTokens = oAuthTokenService.getKakaoTokens(code);
-        KakaoProfile kakaoProfile = kakaoProfileService.getKakaoProfile(kakaoTokens.getAccessToken());
-        return kakaoProfile;
-//        TokenDto tokenDto = kAuthService. 토큰 관련 메소드
-//        return new TotalDto(kakaoProfile, tokenDto); 반환값으로 카카오사용자 정보 + JWT 액세스, 리프레쉬를 넘김
+        MemberDto memberDto = kakaoProfileService.getKakaoProfile(kakaoTokens.getAccessToken());
+        TokenDto tokenDto = kAuthService.login(memberDto);//토큰 관련 메소드
+        return new TotalDto(memberDto, tokenDto); //반환값으로 카카오사용자 정보 + JWT 액세스, 리프레쉬를 넘김
     }
 
 //    @GetMapping(value = "/kakao/callback")
