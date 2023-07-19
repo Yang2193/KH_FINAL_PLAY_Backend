@@ -3,6 +3,7 @@ package com.kh.finalPlayTime.controller;
 import com.kh.finalPlayTime.dto.CommentDto;
 import com.kh.finalPlayTime.dto.PostDto;
 import com.kh.finalPlayTime.dto.ReserveDto;
+import com.kh.finalPlayTime.entity.MemberInfo;
 import com.kh.finalPlayTime.entity.Reserve;
 import com.kh.finalPlayTime.repository.ReserveRepository;
 import com.kh.finalPlayTime.service.*;
@@ -77,6 +78,13 @@ public class MyPageController {
         return ResponseEntity.ok(memberService.updateMemberInfo(userId,userPw,userNickname,userName,userPhone,userEmail));
     }
 
+    @PostMapping("/edit2")
+    public ResponseEntity<Boolean> updateMemberInfo2(@RequestBody Map<String, String> updateData) {
+        String userId = updateData.get("userId");
+        String userNickname = updateData.get("userNickname");
+        System.out.println("컨트롤러: " + userId + userNickname);
+        return ResponseEntity.ok(memberService.updateMemberInfo2(userId,userNickname));
+    }
     @PostMapping("/buylist")
     public ResponseEntity<List<Reserve>> getBuyList(@RequestBody Map<String, String> requestMap) {
         String userId = requestMap.get("userId");
@@ -96,5 +104,13 @@ public class MyPageController {
     public ResponseEntity<ReserveDto> getReserveDetail(@PathVariable Long reserveId){
         ReserveDto reserveDto = reserveService.getReserveDetail(reserveId);
         return new ResponseEntity<>(reserveDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/checkmemberPw")
+    public ResponseEntity<Boolean> passwordCheck(@RequestBody Map<String, String> getUserData) {
+        String userId = getUserData.get("userId");
+        String userPw = getUserData.get("userPw");
+        boolean isPasswordMatch = memberService.checkMemberPw(userId, userPw);
+        return new ResponseEntity<>(isPasswordMatch, HttpStatus.OK);
     }
 }

@@ -30,6 +30,7 @@ public class KakaoController {
         String code = tokenData.get("code");
         KakaoTokens kakaoTokens = oAuthTokenService.getKakaoTokens(code);
         MemberDto memberDto = kakaoProfileService.getKakaoProfile(kakaoTokens.getAccessToken());
+        System.out.println(memberDto.getUserId());
         TokenDto tokenDto = kAuthService.login(memberDto);//토큰 관련 메소드
         return new TotalDto(memberDto, tokenDto); //반환값으로 카카오사용자 정보 + JWT 액세스, 리프레쉬를 넘김
     }

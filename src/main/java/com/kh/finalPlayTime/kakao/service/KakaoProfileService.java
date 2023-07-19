@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
 import java.time.LocalDateTime;
 
 @Service
@@ -43,19 +44,27 @@ public class KakaoProfileService {
                 memberRequest,
                 MemberDto.class
         );
-        MemberInfo memberInfo = new MemberInfo();
-        memberInfo.setUserId(String.valueOf(response.getBody().getId()));
-        String encodeCosKey = passwordEncoder.encode(cosKey);
-        memberInfo.setUserPw(encodeCosKey);
-        memberInfo.setUserName(response.getBody().getKakao_account().getProfile().getNickname());
-        memberInfo.setUserEmail(response.getBody().getKakao_account().getEmail());
-        memberInfo.setUserNickname(response.getBody().getKakao_account().getProfile().getNickname());
-        memberInfo.setSocialOAuth(SocialOAuth.KAKAO);
-        memberInfo.setJoinDate(LocalDateTime.now());
-        memberInfo.setAuthority(Authority.ROLE_USER);
-        memberInfo.setWithdraw(Withdraw.Y);
-        memberInfoRepository.save(memberInfo);
-        System.out.println("저장 완료");
-        return response.getBody();
+        Optional<MemberInfo> memberInfoOptional = memberInfoRepository.findByUserId(String.valueOf(response.getBody().getId()));
+        if (!memberInfoOptional.isPresent()) {
+            MemberInfo memberInfo = new MemberInfo();
+            memberInfo.setUserId(String.valueOf(response.getBody().getId()));
+            String encodeCosKey = passwordEncoder.encode(cosKey);
+            memberInfo.setUserPw(encodeCosKey);
+            memberInfo.setUserName(response.getBody().getKakao_account().getProfile().getNickname());
+            memberInfo.setUserEmail(response.getBody().getKakao_account().getEmail());
+            memberInfo.setUserNickname(response.getBody().getKakao_account().getProfile().getNickname());
+            memberInfo.setSocialOAuth(SocialOAuth.KAKAO);
+            memberInfo.setJoinDate(LocalDateTime.now());
+            memberInfo.setAuthority(Authority.ROLE_USER);
+            memberInfo.setWithdraw(Withdraw.Y);
+            memberInfoRepository.save(memberInfo);
+            System.out.println("저장 완료");
+            return response.getBody();
+        } else {
+            MemberInfo existingMemberInfo = memberInfoOptional.get();
+            return new MemberDto(
+                    existingMemberInfo
+            );
+        }
     }
 }

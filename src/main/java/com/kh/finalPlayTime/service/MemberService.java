@@ -1,21 +1,16 @@
 package com.kh.finalPlayTime.service;
 
 import com.kh.finalPlayTime.dto.MemberDto;
-import com.kh.finalPlayTime.dto.TokenDto;
 import com.kh.finalPlayTime.entity.MemberInfo;
 import com.kh.finalPlayTime.jwt.TokenProvider;
 import com.kh.finalPlayTime.repository.MemberInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +37,8 @@ public class MemberService {
             memberDto.setUserPhone(memberInfo.getUserPhone());
             memberDto.setJoinDate(memberInfo.getJoinDate());
             memberDto.setUserEmail(memberInfo.getUserEmail());
+            memberDto.setAuthority(memberInfo.getAuthority());
+            memberDto.setSocialOAuth(memberInfo.getSocialOAuth());
             memberDto.setMessage("조회 성공");
         } else {
             memberDto.setMessage("아이디가 존재하지 않습니다.");
@@ -70,6 +67,17 @@ public class MemberService {
         return list;
     }
 
+    public boolean checkMemberPw(String userId, String userPw) {
+        Optional<MemberInfo> optionalMemberInfo = memberInfoRepository.findByUserId(userId);
+        if (optionalMemberInfo.isPresent()) {
+            MemberInfo memberInfo = optionalMemberInfo.get();
+            if (passwordEncoder.matches(userPw, memberInfo.getUserPw())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean updateMemberInfo(String userId, String userPw, String userNickname, String userName, String userPhone, String userEmail) {
         System.out.println(userId + userPw + userNickname + userName + userPhone + userEmail);
         return memberInfoRepository.findByUserId(userId)
@@ -79,6 +87,17 @@ public class MemberService {
                     member.setUserName(userName);
                     member.setUserPhone(userPhone);
                     member.setUserEmail(userEmail);
+                    MemberInfo saveMember = memberInfoRepository.save(member);
+                    log.info(saveMember.toString());
+                    return true;
+                })
+                .orElseThrow(() -> new RuntimeException("해당 userId를 가진 멤버를 찾을 수 없습니다."));
+    }
+    public boolean updateMemberInfo2(String userId, String userNickname) {
+        System.out.println(userId + userNickname);
+        return memberInfoRepository.findByUserId(userId)
+                .map(member -> {
+                    member.setUserNickname(userNickname);
                     MemberInfo saveMember = memberInfoRepository.save(member);
                     log.info(saveMember.toString());
                     return true;

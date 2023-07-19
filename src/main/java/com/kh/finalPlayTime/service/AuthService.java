@@ -116,7 +116,6 @@ public class AuthService {
     }
 
     // 회원가입 시 인증메일 발송
-
     public String sendEmail(String userEmail) throws Exception {
         String authCode = emailService.sendAuthMailKey(userEmail);
         return authCode;

@@ -35,11 +35,15 @@ public class KAuthService {
     @Value("${cos.key}")
     private String cosKey;
     public TokenDto login(MemberDto memberDto){
+        if (memberDto.getId() != null) {
+            memberDto.setUserId(String.valueOf(memberDto.getId()));
+        }
         UsernamePasswordAuthenticationToken authenticationToken = memberDto.toAuthentication2(cosKey);
-        MemberInfo loginMember = memberInfoRepository.findByUserId(String.valueOf(memberDto.getId()))
+        MemberInfo loginMember = memberInfoRepository.findByUserId(String.valueOf(memberDto.getUserId()))
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. 회원가입 진행 후 다시 시도해주세요."));
 
         // 비밀번호 맞는지 확인
+        System.out.println(loginMember.getUserPw());
         if (!passwordEncoder.matches(cosKey, loginMember.getUserPw())) {
             throw new IllegalArgumentException("비밀번호가 맞지 않습니다.");
         }

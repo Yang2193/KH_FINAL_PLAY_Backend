@@ -3,10 +3,10 @@ package com.kh.finalPlayTime.dto;
 import com.kh.finalPlayTime.constant.Authority;
 import com.kh.finalPlayTime.constant.Withdraw;
 import com.kh.finalPlayTime.entity.MemberInfo;
+import com.kh.finalPlayTime.kakao.constant.SocialOAuth;
 import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -27,6 +27,9 @@ public class MemberDto {
     private String userEmail;
     private String userNickname;
     private LocalDateTime joinDate;
+    private Authority authority;
+    private SocialOAuth socialOAuth;
+    private Withdraw withdraw;
     private String message;
 
     public MemberInfo toMember(PasswordEncoder passwordEncoder) {
@@ -38,6 +41,7 @@ public class MemberDto {
                 .userEmail(userEmail)
                 .userPhone(userPhone)
                 .authority(Authority.ROLE_USER)
+                .socialOAuth(SocialOAuth.DEFAULT)
                 .joinDate(LocalDateTime.now())
                 .withdraw(Withdraw.Y)
                 .build();
@@ -49,8 +53,8 @@ public class MemberDto {
     }
 
     public UsernamePasswordAuthenticationToken toAuthentication2(String cosKey) {
-        System.out.println("MemberDto이 toAuthentication : " + id + " " + cosKey);
-        return new UsernamePasswordAuthenticationToken(id, cosKey);
+        System.out.println("MemberDto이 toAuthentication2 : " + userId + " " + cosKey);
+        return new UsernamePasswordAuthenticationToken(userId, cosKey);
     }
 
     public static MemberDto of(MemberInfo member) {
@@ -82,5 +86,18 @@ public class MemberDto {
             private String nickname;
             private String thumbnail_image_url;
         }
+    }
+    public MemberDto(MemberInfo memberInfo) {
+        this.userId = memberInfo.getUserId();
+        this.userPw = memberInfo.getUserPw();
+        this.userName = memberInfo.getUserName();
+        this.userNickname = memberInfo.getUserNickname();
+        this.userEmail = memberInfo.getUserEmail();
+        this.userPhone = memberInfo.getUserPhone();
+        this.joinDate = memberInfo.getJoinDate();
+        this.withdraw = memberInfo.getWithdraw();
+        this.authority = memberInfo.getAuthority();
+        this.socialOAuth = memberInfo.getSocialOAuth();
+        // 나머지 필드 초기화
     }
 }
