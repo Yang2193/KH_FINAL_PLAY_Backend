@@ -1,5 +1,6 @@
 package com.kh.finalPlayTime.dto;
 
+import com.kh.finalPlayTime.entity.Post;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,4 +15,5 @@ public class CommentDto {
     private String userId;
     private String nickname;
     private Long postId;
+    private String postTitle;
 }
