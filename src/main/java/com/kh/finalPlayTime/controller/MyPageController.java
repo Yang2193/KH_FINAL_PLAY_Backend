@@ -95,8 +95,7 @@ public class MyPageController {
     @PostMapping("/withdraw")
     public ResponseEntity<Boolean> withDrawalUser(@RequestBody Map<String, String> deleteData) {
         String userId = deleteData.get("userId");
-        String userPw = deleteData.get("userPw");
-        System.out.println(userId + " " + userPw);
+        System.out.println(userId);
         return ResponseEntity.ok(authService.withdrawal(userId));
     }
 
