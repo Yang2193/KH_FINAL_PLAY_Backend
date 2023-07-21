@@ -39,6 +39,7 @@ public class MemberService {
             memberDto.setUserEmail(memberInfo.getUserEmail());
             memberDto.setAuthority(memberInfo.getAuthority());
             memberDto.setSocialOAuth(memberInfo.getSocialOAuth());
+            memberDto.setImgUrl(memberInfo.getImgUrl());
             memberDto.setMessage("조회 성공");
         } else {
             memberDto.setMessage("아이디가 존재하지 않습니다.");
@@ -78,8 +79,7 @@ public class MemberService {
         return false;
     }
 
-    public boolean updateMemberInfo(String userId, String userPw, String userNickname, String userName, String userPhone, String userEmail) {
-        System.out.println(userId + userPw + userNickname + userName + userPhone + userEmail);
+    public boolean updateMemberInfo(String userId, String userPw, String userNickname, String userName, String userPhone, String userEmail, String imgUrl) {
         return memberInfoRepository.findByUserId(userId)
                 .map(member -> {
                     member.setUserPw(passwordEncoder.encode(userPw));
@@ -87,17 +87,19 @@ public class MemberService {
                     member.setUserName(userName);
                     member.setUserPhone(userPhone);
                     member.setUserEmail(userEmail);
+                    member.setImgUrl(imgUrl);
                     MemberInfo saveMember = memberInfoRepository.save(member);
                     log.info(saveMember.toString());
                     return true;
                 })
                 .orElseThrow(() -> new RuntimeException("해당 userId를 가진 멤버를 찾을 수 없습니다."));
     }
-    public boolean updateMemberInfo2(String userId, String userNickname) {
-        System.out.println(userId + userNickname);
+    public boolean updateMemberInfo2(String userId, String userNickname, String imgUrl) {
+        System.out.println(userId + userNickname + imgUrl);
         return memberInfoRepository.findByUserId(userId)
                 .map(member -> {
                     member.setUserNickname(userNickname);
+                    member.setImgUrl(imgUrl);
                     MemberInfo saveMember = memberInfoRepository.save(member);
                     log.info(saveMember.toString());
                     return true;
