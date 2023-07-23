@@ -74,9 +74,9 @@ public class MyPageController {
         String userName = updateData.get("userName");
         String userPhone = updateData.get("userPhone");
         String userEmail = updateData.get("userEmail");
-        String imgUrl = updateData.get("imgUrl");
-        System.out.println("컨트롤러: " + imgUrl);
-        return ResponseEntity.ok(memberService.updateMemberInfo(userId,userPw,userNickname,userName,userPhone,userEmail, imgUrl));
+        String userImgUrl = updateData.get("imageUrl");
+        System.out.println("컨트롤러: " + userImgUrl);
+        return ResponseEntity.ok(memberService.updateMemberInfo(userId,userPw,userNickname,userName,userPhone,userEmail, userImgUrl));
     }
 
     @PostMapping("/edit2")

@@ -79,7 +79,7 @@ public class MemberService {
         return false;
     }
 
-    public boolean updateMemberInfo(String userId, String userPw, String userNickname, String userName, String userPhone, String userEmail, String imgUrl) {
+    public boolean updateMemberInfo(String userId, String userPw, String userNickname, String userName, String userPhone, String userEmail, String userImgUrl) {
         return memberInfoRepository.findByUserId(userId)
                 .map(member -> {
                     member.setUserPw(passwordEncoder.encode(userPw));
@@ -87,7 +87,7 @@ public class MemberService {
                     member.setUserName(userName);
                     member.setUserPhone(userPhone);
                     member.setUserEmail(userEmail);
-                    member.setImgUrl(imgUrl);
+                    member.setImgUrl(userImgUrl);
                     MemberInfo saveMember = memberInfoRepository.save(member);
                     log.info(saveMember.toString());
                     return true;

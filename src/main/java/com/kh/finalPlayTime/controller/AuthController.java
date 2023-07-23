@@ -41,6 +41,12 @@ public class AuthController { // 로그인 회원가입 ID/PW 찾기 여기에�
         return ResponseEntity.ok(authService.sendEmail(userEmail));
     }
 
+    @PostMapping("/mypageEmailAuth")
+    public ResponseEntity<String> mypageEmailAuth(@RequestBody Map<String, String> sendData) throws Exception {
+        String userEmail = sendData.get("userEmail");
+        return ResponseEntity.ok(authService.AuthEmail(userEmail));
+    }
+
     @PostMapping("/userIdCheck")
     public Boolean userIdCheck(@RequestBody Map<String, String> checkData) {
         String userId = checkData.get("userId");
